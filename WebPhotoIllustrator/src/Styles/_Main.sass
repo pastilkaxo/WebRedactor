@@ -1,0 +1,71 @@
+.main-container
+    scroll-behavior: smooth
+
+.section
+    min-height: 100vh
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    padding: 20px
+    box-sizing: border-box
+
+#section1
+    display: flex
+    justify-content: center
+    align-items: center
+    gap: clamp(10px, 5vw, 40px)
+    background-image: url("https://github.com/pastilkaxo/WebPhotoIllustrator/blob/f7b17b911ecc6847fb5be11e4823fd1ec522adc1/public/Images/bg1.png?raw=true")
+    background-size: cover
+    background-position: center
+    padding: clamp(15px, 5vw, 40px)
+    flex-direction: column
+    min-height: 100vh
+
+// Планшеты (до 768px)
+@media (max-width: 768px)
+    #section1
+        padding: 20px
+
+        & .regForm
+            width: 90%
+            max-width: 350px
+            max-height: 85vh
+            padding: clamp(15px, 3vw, 25px)
+
+        & .logoBg
+            width: clamp(35px, 12vw, 50px)
+            height: clamp(35px, 12vw, 50px)
+
+        & .logoIcon
+            max-width: 30px
+
+// Мобильные устройства (до 480px)
+@media (max-width: 480px)
+    #section1
+        padding: 15px
+
+        & .regForm
+            width: 95%
+            max-width: 320px
+            max-height: 80vh
+            padding: 15px
+
+        & .logoBg
+            width: clamp(30px, 18vw, 45px)
+            height: clamp(30px, 18vw, 45px)
+            margin-bottom: 8px
+
+        & .logoIcon
+            max-width: 55px
+
+// Общие стили для других секций
+#section2, #section3, #section4
+    padding: 20px
+    text-align: center
+
+    h1
+        font-size: clamp(24px, 5vw, 36px)
+
+    p
+        font-size: clamp(16px, 4vw, 20px)

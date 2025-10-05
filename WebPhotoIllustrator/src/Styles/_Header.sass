@@ -1,0 +1,55 @@
+
+.nav
+    align-items: center
+    justify-content: center
+    gap: 30px
+
+.logoIcon
+    width: 50px
+    transition: transform 0.3s ease
+.logoIcon:hover
+    transform: scale(1.2)
+.homeIcon
+    width: 42px
+    transition: transform 0.3s ease
+.homeIcon:hover
+    transform: scale(1.2)
+.accountIcon
+    transition: transform 0.3s ease
+.accountIcon:hover
+    transform: scale(1.2)
+
+.aLink:hover
+    color: #f1f1f1
+.aLink:active
+    color: #fff
+    background-color: #4CAF50
+
+.nav-link
+    display: flex
+    align-items: center
+    justify-content: center
+    color: #fff
+    font-size: 26px
+    font-weight: 500
+    text-decoration: none
+    transition: color 0.3s ease
+.header-offcanvas
+    .nav-item
+        text-align: center
+        border-bottom: 1px solid grey
+        display: flex
+        align-items: center
+        justify-content: center
+
+.adaptive-logo
+    display: none
+
+@media (max-width: 768px) and (orientation: portrait)
+.adaptive-logo
+    display: block
+
+/* Скрываем при landscape, даже если ширина меньше 768px */
+@media (max-width: 768px) and (orientation: landscape)
+.adaptive-logo
+    display: none
