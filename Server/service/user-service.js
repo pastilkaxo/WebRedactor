@@ -5,8 +5,11 @@ const mailService = require("../service/mail-service.js");
 const tokenService = require("../service/token-service.js");
 const UserDto = require("../dtos/user-dto")
 const ApiError = require("../Exceptions/api-error");
+const userService = require("mongodb/lib/mongo_client");
+const userModel = require("mongodb/lib/collection");
 
 class UserService {
+
     async register(email,password) {
         const candidate = await UserModel.findOne({email});
         if (candidate) {
@@ -32,6 +35,43 @@ class UserService {
         }
         user.isActivated = true;
         await user.save();
+    }
+
+    async login(email,password) {
+        const user = await UserModel.findOne({email});
+        if(!user) {
+            throw ApiError.BadRequest("Пользователь с таким email не найден!");
+        }
+        const isPassEquals = await bcrypt.compare(password, user.password);
+        if(!isPassEquals) {
+            throw ApiError.BadRequest("Некорректный пароль");
+        }
+        const userDto = new UserDto(user);
+        const tokens = tokenService.generateTokens({...userDto});
+        await tokenService.saveToken(userDto.id,tokens.refreshToken);
+        return {...tokens,user: userDto}
+    }
+
+    async logout(refreshToken) {
+        const token = await tokenService.removeToken(refreshToken);
+        return token;
+    }
+
+    async refresh(refreshToken) {
+        if(!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        }
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDatabase = await tokenService.findToken(refreshToken);
+        if(!tokenFromDatabase || !userData) {
+            throw ApiError.UnauthorizedError();
+        }
+        const user = await UserModel.findById(userData.id);
+
+        const userDto = new UserDto(user);
+        const tokens = tokenService.generateTokens({...userDto});
+        await tokenService.saveToken(userDto.id,tokens.refreshToken);
+        return {...tokens,user: userDto}
     }
 }
 
