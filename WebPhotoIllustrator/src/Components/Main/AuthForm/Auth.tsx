@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Box, TextField, Button, Typography, Stack, Slide } from '@mui/material';
 import Register from './Register';
+import {Context} from "../../../index";
+import {observer}  from "mobx-react-lite";
 
-export default function Auth() {
+function Auth(){
   const [showRegister, setShowRegister] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const {store} =  useContext(Context);
+
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -18,38 +22,18 @@ export default function Auth() {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validate()) {
-    try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Успешный вход!");
-        localStorage.setItem("token", data.token);
-        console.log(data.token);
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      console.error("Ошибка:", err);
-    }
-  }
-};
-
-
   return (
     <>
       {!showRegister && (
         <Slide direction="right" in={!showRegister} mountOnEnter unmountOnExit>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (validate()) {
+                await store.login(email, password);
+              }
+            }}
             sx={{
               width: 'clamp(280px, 40vw, 400px)',
               p: 'clamp(15px, 3vw, 25px)',
@@ -128,3 +112,5 @@ const handleSubmit = async (e: React.FormEvent) => {
     </>
   );
 }
+
+export default observer(Auth);

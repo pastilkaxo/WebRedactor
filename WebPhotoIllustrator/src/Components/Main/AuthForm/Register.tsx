@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Box, TextField, Button, Typography, Stack, Slide } from '@mui/material';
+import {Context} from "../../../index";
+import {observer} from "mobx-react-lite";
 
 interface RegisterProps {
   onBack: () => void;
 }
 
-export default function Register({ onBack }: RegisterProps) {
+function Register({ onBack }: RegisterProps) {
   const [email, setEmail] = useState('');
-  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; login?: string; password?: string; confirm?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string;  password?: string; confirm?: string }>({});
+  const {store} =  useContext(Context);
 
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!email) newErrors.email = 'Введите email';
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Некорректный email';
-    if (!login) newErrors.login = 'Введите логин';
     if (!password) newErrors.password = 'Введите пароль';
     if (!confirm) newErrors.confirm = 'Подтвердите пароль';
     else if (password !== confirm) newErrors.confirm = 'Пароли не совпадают';
@@ -24,35 +25,18 @@ export default function Register({ onBack }: RegisterProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validate()) {
-    try {
-      const response = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, login, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Регистрация успешна!");
-        onBack();
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      console.error("Ошибка:", err);
-    }
-  }
-};
 
 
   return (
     <Slide direction="left" in mountOnEnter unmountOnExit>
       <Box
         component="form"
-        onSubmit={handleSubmit}
+        onSubmit={async (e) => {
+            e.preventDefault();
+            if (validate()) {
+                await store.register(email, password);
+            }
+        }}
         sx={{
           width: 'clamp(280px, 40vw, 400px)',
           p: 'clamp(15px, 3vw, 25px)',
@@ -67,7 +51,6 @@ const handleSubmit = async (e: React.FormEvent) => {
       >
         <Stack spacing={2} sx={{ width: '100%' }}>
           <TextField label="Электронный адрес" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} error={!!errors.email} helperText={errors.email} />
-          <TextField label="Логин" fullWidth value={login} onChange={(e) => setLogin(e.target.value)} error={!!errors.login} helperText={errors.login} />
           <TextField label="Пароль" type="password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password} />
           <TextField label="Подтверждение пароля" type="password" fullWidth value={confirm} onChange={(e) => setConfirm(e.target.value)} error={!!errors.confirm} helperText={errors.confirm} />
 
@@ -99,3 +82,5 @@ const handleSubmit = async (e: React.FormEvent) => {
     </Slide>
   );
 }
+
+export default observer(Register);

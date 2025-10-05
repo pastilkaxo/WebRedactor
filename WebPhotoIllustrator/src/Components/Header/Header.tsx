@@ -2,12 +2,10 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import LoginModal from './LoginModal'
 import NavBar from './NavBar'
-interface HeaderProps {
-  logged: boolean;
-}
 
 
-function Header({logged}:HeaderProps) {
+
+function Header() {
   const location = useLocation();
   const isEditorPage = location.pathname === '/editor';
 
@@ -54,7 +52,7 @@ function Header({logged}:HeaderProps) {
           </Link>
         </li>
         <li className='nav-item'>
-          {logged ? 
+          {true ?
             <Link className="nav-link text-white" to="/profile">
               <img className='accountIcon ms-md-0 ms-auto' src='/Images/login.png' alt='login' />
             </Link>

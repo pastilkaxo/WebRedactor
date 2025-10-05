@@ -2,16 +2,13 @@ import React from 'react';
 import Auth from './AuthForm/Auth';
 
 
-interface MainProps {
-  logged: boolean;
-}
 
-export default function Main({logged}:MainProps) {
+export default function Main() {
 
   return (
     <div className="main-container">
       <section id="section1" className="section roboto-font d-flex">
-          {logged ? <Auth/> : null}
+          {true ? <Auth/> : null}
       </section>
       <section id="section2" className="section">
         <h1>Section 2</h1>
