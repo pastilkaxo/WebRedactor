@@ -5,8 +5,7 @@ const mailService = require("../service/mail-service.js");
 const tokenService = require("../service/token-service.js");
 const UserDto = require("../dtos/user-dto")
 const ApiError = require("../Exceptions/api-error");
-const userService = require("mongodb/lib/mongo_client");
-const userModel = require("mongodb/lib/collection");
+
 
 class UserService {
 
@@ -61,7 +60,7 @@ class UserService {
         if(!refreshToken) {
             throw ApiError.UnauthorizedError();
         }
-        const userData = tokenService.validateRefreshToken(refreshToken);
+        const userData = await tokenService.validateRefreshToken(refreshToken);
         const tokenFromDatabase = await tokenService.findToken(refreshToken);
         if(!tokenFromDatabase || !userData) {
             throw ApiError.UnauthorizedError();
@@ -73,6 +72,12 @@ class UserService {
         await tokenService.saveToken(userDto.id,tokens.refreshToken);
         return {...tokens,user: userDto}
     }
+
+    async getAllUsers() {
+        const users = await UserModel.find();
+        return users;
+    }
+
 }
 
 module.exports = new UserService();
