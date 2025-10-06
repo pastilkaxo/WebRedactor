@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   credentials: true,
-  origin: "http://localhost:3000"
+  origin: true // 172.20.10.13.3000 and all
 }));
 app.use('/api',router);
 app.use(errorMiddleware);

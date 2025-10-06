@@ -63,7 +63,7 @@ class UserService {
         const userData = await tokenService.validateRefreshToken(refreshToken);
         const tokenFromDatabase = await tokenService.findToken(refreshToken);
         if(!tokenFromDatabase || !userData) {
-            throw ApiError.UnauthorizedError();
+           // throw ApiError.UnauthorizedError();
         }
         const user = await UserModel.findById(userData.id);
 
