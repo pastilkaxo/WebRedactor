@@ -1,10 +1,8 @@
-import React, {useContext, useState} from 'react'
 import {Context} from "../../../../index";
 import {observer} from  "mobx-react-lite";
 import UserService from "../../../../Services/UserService";
 import {IUser} from "../../../../models/IUser";
 import AspectRatio from '@mui/joy/AspectRatio';
-import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
@@ -19,10 +17,12 @@ import CardOverflow from '@mui/joy/CardOverflow';
 
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import ProfileCard from "./Card";
+import {useContext, useState} from "react";
+import MobileStack from "./MUI/MobileStack";
+import DesktopStack from "./MUI/DesktopStack";
 
-function Profile() {
-  const {store} = useContext(Context);
+function ProfileCard(){
+    const {store} = useContext(Context);
     const [users, setUsers] = useState<IUser[]>([]);
 
     async function getUser(){
@@ -36,21 +36,23 @@ function Profile() {
     }
 
 
-    return (
-        <Box sx={{flex:1, width:'100%'}}>
-            <Stack spacing={4} sx={{
-                display: 'flex',
-                maxWidth: '800px',
-                mx: 'auto',
-                mt: '100px',
-                px: { xs: 2, md: 6 },
-                py: { xs: 2, md: 3 },
-            }}>
-                <Typography sx={{fontSize:"52px"}} align="center">My Account</Typography>
-                <ProfileCard/>
-            </Stack>
-        </Box>
-  )
+    return(
+        <Card>
+        <Divider />
+            <DesktopStack/>
+            <MobileStack/>
+        <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+            <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
+                <Button size="sm" variant="outlined" color="neutral">
+                    Cancel
+                </Button>
+                <Button size="sm" variant="solid">
+                    Save
+                </Button>
+            </CardActions>
+        </CardOverflow>
+    </Card>)
 }
 
-export default observer(Profile);
+
+export default observer(ProfileCard);
