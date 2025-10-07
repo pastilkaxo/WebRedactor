@@ -6,7 +6,7 @@ export default function NavBar() {
         <div className="offcanvas-header">
         <Link className="offcanvas-title nav-link text-dark" to="/">
                             <img className='logoIcon' src='/Images/dark-logo.png' alt='logo'  style={{width:"40px"}}/>
-                          </Link>
+        </Link>
         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
             <div className="offcanvas-body header-offcanvas">
@@ -32,6 +32,13 @@ export default function NavBar() {
 
                           </Link>
                         </li>
+                    <li className="nav-item">
+                        <Link className="nav-link text-dark" to="/profile">
+                            <img className='accountIcon ms-md-0 ms-auto' src='/Images/login.png' alt='login' />
+                            <p>Профиль</p>
+
+                        </Link>
+                    </li>
             </ul>
         </div>
   </div>
