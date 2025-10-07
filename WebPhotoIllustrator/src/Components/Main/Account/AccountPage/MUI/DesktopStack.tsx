@@ -90,7 +90,7 @@ function DesktopStack(){
                     </FormControl>
                 </Stack>
                 <Stack direction="row" spacing={1}>
-                    <Button>Выйти</Button>
+                    <Button onClick={() => store.logout()}>Выйти</Button>
                 </Stack>
             </Stack>
         </Stack>
