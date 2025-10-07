@@ -31,6 +31,7 @@ function Auth(){
             onSubmit={async (e) => {
               e.preventDefault();
               if (validate()) {
+                alert("Вход!");
                 await store.login(email, password);
               }
             }}
