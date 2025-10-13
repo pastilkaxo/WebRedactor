@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import { Box, TextField, Button, Typography, Stack, Slide } from '@mui/material';
 import {Context} from "../../../index";
 import {observer} from "mobx-react-lite";
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterProps {
   onBack: () => void;
@@ -13,6 +14,7 @@ function Register({ onBack }: RegisterProps) {
   const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState<{ email?: string;  password?: string; confirm?: string }>({});
   const {store} =  useContext(Context);
+  const navigator = useNavigate();
 
   const validate = () => {
     const newErrors: typeof errors = {};
@@ -21,22 +23,30 @@ function Register({ onBack }: RegisterProps) {
     if (!password) newErrors.password = 'Введите пароль';
     if (!confirm) newErrors.confirm = 'Подтвердите пароль';
     else if (password !== confirm) newErrors.confirm = 'Пароли не совпадают';
+    if ((password.length && confirm.length) != 6) {
+      newErrors.password = "Длина пароля должна быть больше 6"
+      newErrors.confirm = "Длина пароля должна быть больше 6"
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
 
+  const handleRegister = async (e:React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      await store.register(email, password);
+      if (store.isAuth) {
+        navigator("/profile");
+      }
+    }
+  }
 
   return (
     <Slide direction="left" in mountOnEnter unmountOnExit>
       <Box
         component="form"
-        onSubmit={async (e) => {
-            e.preventDefault();
-            if (validate()) {
-                await store.register(email, password);
-            }
-        }}
+        onSubmit={handleRegister}
         sx={{
           width: 'clamp(280px, 40vw, 400px)',
           p: 'clamp(15px, 3vw, 25px)',
