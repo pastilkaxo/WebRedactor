@@ -4,7 +4,6 @@ import AuthService from "../Services/AuthService";
 import axios from "axios";
 import {IAuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
-
 export default  class Store {
     user = {} as IUser;
     isAuth = false;
@@ -25,12 +24,13 @@ export default  class Store {
     }
 
     async login(email: string, password: string) {
-        try{
+        try {
             const response = await AuthService.login(email, password);
             console.log(response);
             localStorage.setItem("token", response.data.accessToken);
             this.setAuth(true);
             this.setUser(response.data.user);
+
         }
         catch(err:any){
             console.log(err.response?.data?.message);
