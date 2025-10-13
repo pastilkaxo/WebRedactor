@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import LoginModal from './LoginModal'
 import NavBar from './NavBar'
-
-
 
 function Header() {
   const location = useLocation();
@@ -14,61 +11,24 @@ function Header() {
   }
 
   return (
-    <div
-      className="d-flex flex-md-column flex-row p-3 bg-success bg-gradient text-white"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        height: '100vh',
-        width: '120px', 
-        zIndex: 1150, 
-      }}
-    >
-      <ul className="main-menu nav navbar nav-pills flex-md-column flex-row mb-auto w-100 justify-content-center align-items-center">
-      <li className='nav-item menu-togler'>
-      <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-      </li>
-      <li className="nav-item">
-          <Link className=" nav-link text-white" to="/">
-            <img className='logoIcon' src='/Images/logo.png' alt='logo' />
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link text-white" to="/">
-            <img className='homeIcon' src='/Images/home.png' alt='Home' />
-          </Link>
-        </li>
-        <li className='nav-item'>
-          <Link className="nav-link text-white" to="/storage">
-            <img className='homeIcon' src='/Images/catalog.png' alt='Catalog' />
-          </Link>
-        </li>
-        <li className='nav-item'>
-          <Link className="nav-link text-white" to="/editor">
-            <img className='homeIcon' src='/Images/edit.png' alt='Create' />
-          </Link>
-        </li>
-        <li className='nav-item'>
-          {true ?
-            <Link className="nav-link text-white" to="/profile">
-              <img className='accountIcon ms-md-0 ms-auto' src='/Images/login.png' alt='login' />
-            </Link>
-            :
-        <img className='accountIcon ms-md-0 ms-auto' src='/Images/login.png' alt='login' data-bs-toggle="modal" data-bs-target="#loginModal" />    
-        }
-        </li>
-      </ul>
-      <div className='adaptive-logo'>
-      <Link className="nav-link text-white" to="/">
-            <img className='logoIcon' src='/Images/logo.png' alt='logo' />
-      </Link>
-      </div>
-      <LoginModal />
+    <aside className="app-sidebar">
+      <nav className="nav navbar flex-column">
+        <Link className="nav-link aLink" to="/">
+          <img className='logoIcon' src='/Images/logo.png' alt='logo' />
+        </Link>
+        <Link className="nav-link aLink aLink-mobile" to="/storage">
+          <img className='homeIcon' src='/Images/catalog.png' alt='Catalog' />
+        </Link>
+        <Link className="nav-link aLink aLink-mobile" to="/editor">
+         <img className='homeIcon' src='/Images/edit.png' alt='Create' />
+        </Link>
+        <Link className="nav-link aLink aLink-mobile" to="/profile">
+           <img className='accountIcon ms-md-0 ms-auto' src='/Images/login.png' alt='login' />
+        </Link>
+        <img className='burgerIcon ms-md-0 ms-auto navbar-toggler' src='/Images/burger.png' alt='login' data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation" />
+      </nav>
       <NavBar/>
-    </div>
+    </aside>
   )
 }
 
