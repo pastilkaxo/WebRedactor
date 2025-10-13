@@ -1,19 +1,18 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import Auth from './AuthForm/Auth';
+import { Context } from '../..';
+import { observer } from 'mobx-react-lite';
 
-
-
-export default function Main() {
+function Main() {
+  const { store } = useContext(Context);
 
   return (
     <div className="main-container">
       <section id="section1" className="section roboto-font">
-          {true ? <Auth/> : null}
-      </section>
-      <section id="section2" className="section">
-        <h1>Section 2</h1>
-        <p>Content for section 2...</p>
+        {store.isAuth ? <p>Привет, {store.user.email}!</p> : <Auth/>}
       </section>
     </div>
   );
 }
+
+export default observer(Main);
