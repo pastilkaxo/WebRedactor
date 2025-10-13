@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import NavBar from './NavBar'
+import { Context } from '../..';
+import { observer } from 'mobx-react-lite';
+
 
 function Header() {
   const location = useLocation();
   const isEditorPage = location.pathname === '/editor';
+  const { store } = useContext(Context);
+  
 
   if (isEditorPage) {
     return null;
@@ -32,4 +37,4 @@ function Header() {
   )
 }
 
-export default Header
+export default observer(Header)
