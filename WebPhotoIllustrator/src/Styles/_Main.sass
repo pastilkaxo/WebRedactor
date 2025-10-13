@@ -1,5 +1,7 @@
+
 .main-container
     scroll-behavior: smooth
+    min-width: 0
 
 .section
     min-height: 100vh
@@ -11,11 +13,8 @@
     box-sizing: border-box
 
 #section1
-    display: flex
-    justify-content: center
-    align-items: center
     gap: clamp(10px, 5vw, 40px)
-    background-image: url("https://github.com/pastilkaxo/WebPhotoIllustrator/blob/f7b17b911ecc6847fb5be11e4823fd1ec522adc1/public/Images/bg1.png?raw=true")
+    background-image: url("/public/Images/HomePage/bg1.png")
     background-size: cover
     background-position: center
     padding: clamp(15px, 5vw, 40px)
@@ -26,7 +25,7 @@
 @media (max-width: 768px)
     #section1
         padding: 20px
-
+        justify-content: start
         & .regForm
             width: 90%
             max-width: 350px

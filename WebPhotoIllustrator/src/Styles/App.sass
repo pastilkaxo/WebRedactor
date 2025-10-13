@@ -13,6 +13,7 @@
 
 html
     scroll-behavior: smooth
+    overflow: hidden
     font-family: "Roboto"
 
 body
@@ -35,3 +36,14 @@ body
 .d-flex.min-vh-100
     min-height: 100vh
     height: 100vh
+
+.wrapper
+    display: flex
+    min-height: 100vh
+    height: 100vh
+    width: 100%
+
+    /* main-content — правая колонка: внутренняя прокрутка */
+.main-content
+    height: 100vh
+    overflow-y: auto

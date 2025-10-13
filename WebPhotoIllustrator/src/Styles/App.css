@@ -641,10 +641,33 @@ canvas:active {
     height: 30px;
   }
 }
-.nav {
+.app-sidebar {
+  background: linear-gradient(180deg, #2e8b57, #1f6b43);
+  color: #fff;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 30px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+.app-sidebar .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Стили ссылок — сохраните ваши правила (.nav-link .aLink) */
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .logoIcon {
@@ -674,6 +697,7 @@ canvas:active {
 }
 
 .aLink:hover {
+  cursor: pointer;
   color: #f1f1f1;
 }
 
@@ -682,40 +706,46 @@ canvas:active {
   background-color: #4CAF50;
 }
 
-.nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 26px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.header-offcanvas .nav-item {
-  text-align: center;
-  border-bottom: 1px solid grey;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.adaptive-logo {
+.burgerIcon {
   display: none;
 }
 
-.adaptive-logo {
-  display: block;
+/* Мобильная версия: horizontal topbar */
+@media (max-width: 768px) {
+  .aLink-mobile {
+    display: none;
+  }
+  .burgerIcon {
+    display: block;
+    width: 60px;
+  }
+  .app-sidebar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #2e8b57 #1f6b43;
+    /* отменяем высоту и вертикальный скролл, делаем блок "авто" по высоте */
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  .app-sidebar .nav {
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    justify-content: space-around;
+    /* если элементов больше, разрешаем горизонтальную прокрутку вместо вертикальной */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 }
-
-/* Скрываем при landscape, даже если ширина меньше 768px */
-.adaptive-logo {
-  display: none;
-}
-
 .main-container {
   scroll-behavior: smooth;
+  min-width: 0;
 }
 
 .section {
@@ -729,11 +759,8 @@ canvas:active {
 }
 
 #section1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   gap: clamp(10px, 5vw, 40px);
-  background-image: url("https://github.com/pastilkaxo/WebPhotoIllustrator/blob/f7b17b911ecc6847fb5be11e4823fd1ec522adc1/public/Images/bg1.png?raw=true");
+  background-image: url("/public/Images/HomePage/bg1.png");
   background-size: cover;
   background-position: center;
   padding: clamp(15px, 5vw, 40px);
@@ -744,6 +771,7 @@ canvas:active {
 @media (max-width: 768px) {
   #section1 {
     padding: 20px;
+    justify-content: start;
   }
   #section1 .regForm {
     width: 90%;
@@ -807,7 +835,6 @@ canvas:active {
     flex-direction: row !important;
     width: 100% !important;
     gap: 10px;
-    justify-content: start !important;
     align-items: center !important;
     margin-bottom: 0 !important;
   }
@@ -871,6 +898,7 @@ canvas:active {
 
 html {
   scroll-behavior: smooth;
+  overflow: hidden;
   font-family: "Roboto";
 }
 
@@ -897,4 +925,17 @@ body {
 .d-flex.min-vh-100 {
   min-height: 100vh;
   height: 100vh;
+}
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
+  /* main-content — правая колонка: внутренняя прокрутка */
+}
+
+.main-content {
+  height: 100vh;
+  overflow-y: auto;
 }/*# sourceMappingURL=App.css.map */

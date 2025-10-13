@@ -1,8 +1,31 @@
+$sidebar-width: 200px
 
-.nav
+.app-sidebar
+    background: linear-gradient(180deg, #2e8b57, #1f6b43)
+    color: #fff
+    display: flex
     align-items: center
     justify-content: center
-    gap: 30px
+    padding: 12px
+    box-sizing: border-box
+
+    .nav
+        display: flex
+        flex-direction: column
+        gap: 20px
+        align-items: center
+        width: 100%
+
+/* Стили ссылок — сохраните ваши правила (.nav-link .aLink) */
+.nav-link
+    display: flex
+    align-items: center
+    justify-content: center
+    color: #fff
+    font-size: 26px
+    font-weight: 500
+    text-decoration: none
+    transition: color 0.3s ease
 
 .logoIcon
     width: 50px
@@ -20,36 +43,46 @@
     transform: scale(1.2)
 
 .aLink:hover
+    cursor: pointer
     color: #f1f1f1
 .aLink:active
     color: #fff
     background-color: #4CAF50
 
-.nav-link
-    display: flex
-    align-items: center
-    justify-content: center
-    color: #fff
-    font-size: 26px
-    font-weight: 500
-    text-decoration: none
-    transition: color 0.3s ease
-.header-offcanvas
-    .nav-item
-        text-align: center
-        border-bottom: 1px solid grey
-        display: flex
-        align-items: center
-        justify-content: center
-
-.adaptive-logo
+.burgerIcon
     display: none
 
-@media (max-width: 768px) and (orientation: portrait)
-.adaptive-logo
-    display: block
+/* Мобильная версия: horizontal topbar */
+@media (max-width: 768px)
 
-/* Скрываем при landscape, даже если ширина меньше 768px */
-@media (max-width: 768px) and (orientation: landscape)
-.adaptive-logo
-    display: none
+    .aLink-mobile
+        display: none
+
+    .burgerIcon
+        display: block
+        width: 60px
+
+    .app-sidebar
+        flex-direction: row
+        justify-content: space-between
+        padding: 8px 12px
+        -webkit-overflow-scrolling: touch
+        scrollbar-width: thin
+        scrollbar-color: #2e8b57 #1f6b43
+
+        /* отменяем высоту и вертикальный скролл, делаем блок "авто" по высоте */
+        height: auto
+        max-height: none
+        overflow: visible
+
+        .nav
+            flex-direction: row
+            gap: 12px
+            width: 100%
+            justify-content: space-around
+
+            /* если элементов больше, разрешаем горизонтальную прокрутку вместо вертикальной */
+            flex-wrap: nowrap
+            overflow-x: auto
+            overflow-y: hidden
+            -webkit-overflow-scrolling: touch
