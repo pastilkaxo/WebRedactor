@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, Stack, Slide } from '@mui/material'
 import Register from './Register';
 import {Context} from "../../../index";
 import {observer}  from "mobx-react-lite";
+import { useNavigate } from 'react-router-dom';
 
 function Auth(){
   const [showRegister, setShowRegister] = useState(false);
@@ -10,7 +11,7 @@ function Auth(){
   const [password, setPassword] = useState<string>('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const {store} =  useContext(Context);
-
+  const navigator = useNavigate();
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -22,19 +23,23 @@ function Auth(){
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      await store.login(email, password);
+      if (store.isAuth) {
+        navigator("/profile");
+      }
+    }
+  }
+
   return (
     <>
       {!showRegister && (
         <Slide direction="right" in={!showRegister} mountOnEnter unmountOnExit>
           <Box
             component="form"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              if (validate()) {
-                alert("Вход!");
-                await store.login(email, password);
-              }
-            }}
+            onSubmit={handleLogin}
             sx={{
               width: 'clamp(280px, 40vw, 400px)',
               p: 'clamp(15px, 3vw, 25px)',
