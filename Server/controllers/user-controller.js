@@ -65,7 +65,7 @@ class UserController {
         }
         catch(err){
             next(err);
-        }
+        }   
     }
 
     async getUsers(req, res,next) {

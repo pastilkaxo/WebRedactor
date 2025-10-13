@@ -1,4 +1,5 @@
 const UserModel = require("../models/user-model.js")
+const RoleModel = require("../models/role-model.js")
 const bcrypt = require("bcrypt")
 const { v4: uuidv4 } = require('uuid');
 const mailService = require("../service/mail-service.js");
