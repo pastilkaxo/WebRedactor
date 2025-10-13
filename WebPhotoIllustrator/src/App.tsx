@@ -16,8 +16,6 @@ import {observer} from "mobx-react-lite"
 // import '@fontsource/inter';
 
 
-
-
 function App() {
     const {store} = useContext(Context);
     useEffect(() => {
