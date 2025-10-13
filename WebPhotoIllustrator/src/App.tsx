@@ -13,7 +13,7 @@ import Storage from './Components/Main/Storage/Storage';
 import Profile from './Components/Main/Account/AccountPage/Profile';
 import {Context} from "./index"
 import {observer} from "mobx-react-lite"
-import '@fontsource/inter';
+// import '@fontsource/inter';
 
 
 
@@ -30,16 +30,16 @@ function App() {
     <Router>
     <div className="wrapper d-flex min-vh-100">
         <Header  />
-        <div className="flex-grow-1" style={{ marginLeft: 0 }}>
-        <main className="main-content">
-          <Routes>
+        <div className="flex-grow-1">
+          <main className="main-content">
+            <Routes>
               <Route path="/" element={<Main  />} />
-            <Route path="/storage" element={<Storage />} />
+              <Route path="/storage" element={<Storage />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/profile" element={<Profile/>} />
-          </Routes>
-        </main>
-      </div>
+            </Routes>
+          </main>
+        </div>
     </div>
   </Router>
   )
