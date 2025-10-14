@@ -1,5 +1,6 @@
 import React from 'react'
 import Alert from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar'
 
 interface AlertSettings { 
   message: string
@@ -7,8 +8,10 @@ interface AlertSettings {
 
 export default function ErrorAlert({ message }: AlertSettings) {
   return (
-    <Alert variant="filled" severity="error">
-      {message}
-    </Alert>
+    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={3000}>
+      <Alert variant="filled" severity="error">
+        {message}
+      </Alert>
+    </Snackbar>
   )
 }
