@@ -4,9 +4,11 @@ import Register from './Register';
 import {Context} from "../../../index";
 import {observer}  from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
+import ResetPasswordForm from "./RequestResetPasswordForm";
 
 function Auth(){
   const [showRegister, setShowRegister] = useState(false);
+  const [showReset, setShowReset] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -35,7 +37,7 @@ function Auth(){
 
   return (
     <>
-      {!showRegister && (
+      {!showRegister && !showReset && (
         <Slide direction="right" in={!showRegister} mountOnEnter unmountOnExit>
           <Box
             component="form"
@@ -76,6 +78,7 @@ function Auth(){
                 variant="body2"
                 color="primary"
                 sx={{ textAlign: 'right', cursor: 'pointer' }}
+                onClick={() => setShowReset(true)}
               >
                 Забыли пароль?
               </Typography>
@@ -115,6 +118,7 @@ function Auth(){
         </Slide>
       )}
       {showRegister && <Register onBack={() => setShowRegister(false)} />}
+      {showReset && <ResetPasswordForm onBack={() => setShowReset(false)} /> }
     </>
   );
 }
