@@ -13,7 +13,8 @@ import Storage from './Components/Main/Storage/Storage';
 import Profile from './Components/Main/Account/AccountPage/Profile';
 import {Context} from "./index"
 import {observer} from "mobx-react-lite"
-import ResetPasswordForm from "./Components/Main/AuthForm/RequestResetPasswordForm";
+import ResetForm from "./Components/Main/AuthForm/ResetForm";
+
 // import '@fontsource/inter';
 
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/storage" element={<Storage />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/profile" element={<Profile/>} />
+                <Route path="/password/reset" element={<ResetForm/>} />
             </Routes>
           </main>
         </div>

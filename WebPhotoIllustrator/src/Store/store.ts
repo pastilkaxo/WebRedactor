@@ -4,6 +4,7 @@ import AuthService from "../Services/AuthService";
 import axios from "axios";
 import {IAuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
+
 export default  class Store {
     user = {} as IUser;
     isAuth = false;
