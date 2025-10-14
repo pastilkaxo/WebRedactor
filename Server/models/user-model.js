@@ -6,6 +6,7 @@ const UserSchema = new Schema({
     isActivated: {type: Boolean, default: false},
     activationLink: {type: String},
     roles: {type: String, ref: 'Role'},
+    resetRequestedAt: {type: Date, default: null},
 })
 
 module.exports = model('User', UserSchema);
