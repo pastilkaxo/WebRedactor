@@ -93,7 +93,7 @@ class UserService {
         await mailService.sendPasswordResetLink(email,resetLink);
         user.resetRequestedAt = new Date();
         await user.save();
-        return {message:`Ссылка для восстановления отправлена на почту ${email}.`}
+        return {passwordToken, message:`Ссылка для восстановления отправлена на почту ${email}.`}
     }
 
     async resetPassword(token,newPassword) {
