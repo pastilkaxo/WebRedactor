@@ -79,6 +79,31 @@ class UserService {
         return users;
     }
 
+    async requestPasswordResetLink(email) {
+        const user  = await UserModel.findOne({email});
+        if(!user) {
+            throw ApiError.BadRequest("Пользователь с таким email не найден!");
+        }
+        const {passwordToken} = tokenService.generatePasswordToken( user._id.toString());
+        const resetLink = `${process.env.CLIENT_URL}/password/reset?token=${passwordToken}`;
+        await mailService.sendPasswordResetLink(email,resetLink);
+        return {message:`Ссылка для восстановления отправлена на почту ${email}.`}
+    }
+
+    async resetPassword(token,newPassword) {
+        const payload = await tokenService.validatePasswordToken(token);
+        console.log("payload.userId:", payload.userId);
+        if (!payload) {
+            throw ApiError.BadRequest("Ссылка недействительна или истекла");
+        }
+        const user = await UserModel.findById(payload.userId);
+        if(!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        user.password = await bcrypt.hash(newPassword, 4);
+        await user.save();
+    }
+
 }
 
 module.exports = new UserService();

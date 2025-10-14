@@ -8,6 +8,21 @@ class TokenService {
         return {accessToken, refreshToken};
     }
 
+    generatePasswordToken(userId){
+        const passwordToken = jwt.sign({userId}, process.env.JWT_RESET_SECRET,{expiresIn:"15m"});
+        return {passwordToken};
+    }
+
+    async validatePasswordToken(token){
+        try{
+            const userData = jwt.verify(token, process.env.JWT_RESET_SECRET);
+            return userData;
+        }
+        catch(error){
+            return null;
+        }
+    }
+
     async validateAccessToken(token) {
         try{
             const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
