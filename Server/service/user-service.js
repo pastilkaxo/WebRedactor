@@ -84,9 +84,15 @@ class UserService {
         if(!user) {
             throw ApiError.BadRequest("Пользователь с таким email не найден!");
         }
+        const now = Date.now();
+        if(user.resetRequestedAt && now - user.resetRequestedAt.getTime() < 15*60*1000) {
+            throw ApiError.BadRequest("Ссылка уже была отправлена недавно. Проверьте почту.");
+        }
         const {passwordToken} = tokenService.generatePasswordToken( user._id.toString());
         const resetLink = `${process.env.CLIENT_URL}/password/reset?token=${passwordToken}`;
         await mailService.sendPasswordResetLink(email,resetLink);
+        user.resetRequestedAt = new Date();
+        await user.save();
         return {message:`Ссылка для восстановления отправлена на почту ${email}.`}
     }
 
