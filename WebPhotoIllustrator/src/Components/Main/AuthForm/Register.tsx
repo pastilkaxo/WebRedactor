@@ -23,7 +23,7 @@ function Register({ onBack }: RegisterProps) {
     if (!password) newErrors.password = 'Введите пароль';
     if (!confirm) newErrors.confirm = 'Подтвердите пароль';
     else if (password !== confirm) newErrors.confirm = 'Пароли не совпадают';
-    if ((password.length && confirm.length) != 6) {
+    if ((password.length && confirm.length) < 6) {
       newErrors.password = "Длина пароля должна быть больше 6"
       newErrors.confirm = "Длина пароля должна быть больше 6"
     }

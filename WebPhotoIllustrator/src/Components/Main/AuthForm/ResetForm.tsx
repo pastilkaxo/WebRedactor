@@ -4,50 +4,51 @@ import {Context} from "../../../index";
 import {observer} from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
 import UserService from "../../../Services/UserService";
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
+import ErrorAlert from "../../ErrorAlerts/ErrorAlert";
 
 interface ResetProps {
     onBack: () => void;
 }
 
 function ResetForm() {
-    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirm, setConfirm] = useState('');
     const [errors, setErrors] = useState<{ email?: string;  password?: string; confirm?: string }>({});
     const [serverMessage, setServerMessage] = useState<string | null>(null);
     const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null);
     const navigator = useNavigate();
+    const token = new URLSearchParams(window.location.search).get("token")
+
     const validate = () => {
-        const newErrors: { email?: string; password?: string } = {};
-        if (!email) newErrors.email = 'Введите email';
-        else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Некорректный email';
+        const newErrors: typeof errors = {};
+        if (!password) newErrors.password = 'Введите пароль';
+        if (!confirm) newErrors.confirm = 'Подтвердите пароль';
+        else if (password !== confirm) newErrors.confirm = 'Пароли не совпадают';
+        if ((password.length && confirm.length) < 6) {
+            newErrors.password = "Длина пароля должна быть больше 6"
+            newErrors.confirm = "Длина пароля должна быть больше 6"
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleReqauestReset = async (e:React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmitReset = async () => {
         try{
-            if(validate()) {
-                const response = await UserService.requestReset(email);
-                console.log(response.data);
-                if(response.status === 200){
-                    setServerSuccessMessage(response.data.message);
-                }
+            if(validate()){
+                const response = await UserService.resetPassword(token ?? '', confirm);
+
             }
         }
-        catch (error:any) {
-            const data = error.response.data.message || "Ошибка сервера";
-            console.log(error.response)
-            setServerMessage(data);
+        catch(error){
+            console.log(error)
         }
     }
 
-    return(
+    return (
         <Slide direction="left" in mountOnEnter unmountOnExit>
             <Box
                 component="form"
-                onSubmit={handleReqauestReset}
+                onSubmit={handleSubmitReset}
                 sx={{
                     width: 'clamp(280px, 40vw, 400px)',
                     p: 'clamp(15px, 3vw, 25px)',
@@ -61,7 +62,8 @@ function ResetForm() {
                 }}
             >
                 <Stack spacing={2} sx={{ width: '100%' }}>
-                    <TextField label="Электронный адрес" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} error={!!errors.email} helperText={errors.email} />
+                    <TextField label="Новый пароль" type="password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} error={!!errors.password} helperText={errors.password} />
+                    <TextField label="Подтверждение пароля" type="password" fullWidth value={confirm} onChange={(e) => setConfirm(e.target.value)} error={!!errors.confirm} helperText={errors.confirm} />
 
                     <Button
                         type="submit"
@@ -76,7 +78,7 @@ function ResetForm() {
                             transition: '0.3s',
                         }}
                     >
-                        Сбросить пароль
+                        Подтвердить
                     </Button>
 
                     <Typography
@@ -87,19 +89,10 @@ function ResetForm() {
                         Назад к авторизации
                     </Typography>
                 </Stack>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={!!serverMessage} autoHideDuration={3000} onClose={() => setServerMessage(null)}>
-                    <Alert severity="error">{serverMessage}</Alert>
-                </Snackbar>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={!!serverSuccessMessage} autoHideDuration={3000} onClose={() => setServerMessage(null)}>
-                    <Alert severity="success">{serverSuccessMessage}</Alert>
-                </Snackbar>
+                <ErrorAlert message={""}/>
             </Box>
         </Slide>
-    )
+    );
 }
 
 export default observer(ResetForm);

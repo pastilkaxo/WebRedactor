@@ -43,9 +43,9 @@ function RequestResetPasswordForm({onBack}: ResetProps) {
         }
     }
 
-    const handleOnClose = () => {
+    const handleOnClose = async () => {
         setServerSuccessMessage(null);
-        navigator("/")
+        onBack();
     }
 
     return(
@@ -99,7 +99,7 @@ function RequestResetPasswordForm({onBack}: ResetProps) {
                 </Snackbar>
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={!!serverSuccessMessage} autoHideDuration={3000} onClose={() => setServerMessage(null)}>
+                    open={!!serverSuccessMessage} autoHideDuration={3000} onClose={handleOnClose}>
                     <Alert severity="success">{serverSuccessMessage}</Alert>
                 </Snackbar>
             </Box>
