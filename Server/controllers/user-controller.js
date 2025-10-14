@@ -78,6 +78,36 @@ class UserController {
         }
     }
 
+    async requestPasswordResetLink(req,res,next){
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest("Ошибка при валидации",errors.array()));
+            }
+            const {email} = req.body;
+            const result = await userService.requestPasswordResetLink(email);
+            return res.json(result);
+
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    async resetPassword(req, res,next) {
+        try{
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest("Ошибка при валидации",errors.array()));
+            }
+            const {token,newPassword} = req.body;
+            const result = await userService.resetPassword(token,newPassword);
+            return res.json(result);
+        }
+        catch(err){
+            next(err);
+        }
+    }
+
 }
 
 module.exports = new UserController();
