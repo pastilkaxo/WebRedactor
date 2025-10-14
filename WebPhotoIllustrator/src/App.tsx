@@ -13,6 +13,7 @@ import Storage from './Components/Main/Storage/Storage';
 import Profile from './Components/Main/Account/AccountPage/Profile';
 import {Context} from "./index"
 import {observer} from "mobx-react-lite"
+import ResetPasswordForm from "./Components/Main/AuthForm/RequestResetPasswordForm";
 // import '@fontsource/inter';
 
 
