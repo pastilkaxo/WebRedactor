@@ -17,7 +17,6 @@ function ResetForm() {
     const [serverMessage, setServerMessage] = useState<string | null>(null);
     const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null);
     const navigator = useNavigate();
-    const token = new URLSearchParams(window.location.search).get("token")
 
     const validate = () => {
         const newErrors: typeof errors = {};
@@ -32,10 +31,10 @@ function ResetForm() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmitReset = async () => {
+    const handleSubmitReset = async (e:React.FormEvent) => {
+        e.preventDefault();
         try{
             if(validate()){
-                const response = await UserService.resetPassword(token ?? '', confirm);
 
             }
         }

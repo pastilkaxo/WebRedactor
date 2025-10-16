@@ -16,7 +16,9 @@ function RequestResetPasswordForm({onBack}: ResetProps) {
     const [errors, setErrors] = useState<{ email?: string;  password?: string; confirm?: string }>({});
     const [serverMessage, setServerMessage] = useState<string | null>(null);
     const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null);
+    const {store} = useContext(Context);
     const navigator = useNavigate();
+
     const validate = () => {
         const newErrors: { email?: string; password?: string } = {};
         if (!email) newErrors.email = 'Введите email';
@@ -25,14 +27,16 @@ function RequestResetPasswordForm({onBack}: ResetProps) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleReqauestReset = async (e:React.FormEvent) => {
+    const handleRequestReset = async (e:React.FormEvent) => {
         e.preventDefault();
         try{
             if(validate()) {
-                const response = await UserService.requestReset(email);
-                console.log(response.data);
-                if(response.status === 200){
-                    setServerSuccessMessage(response.data.message);
+                const {data,error} = await store.requestPasswordReset(email);
+                if(error) {
+                    setServerMessage(error);
+                }
+                else if(data){
+                    setServerSuccessMessage(data.message);
                 }
             }
         }
@@ -52,7 +56,7 @@ function RequestResetPasswordForm({onBack}: ResetProps) {
         <Slide direction="left" in mountOnEnter unmountOnExit>
             <Box
                 component="form"
-                onSubmit={handleReqauestReset}
+                onSubmit={handleRequestReset}
                 sx={{
                     width: 'clamp(280px, 40vw, 400px)',
                     p: 'clamp(15px, 3vw, 25px)',

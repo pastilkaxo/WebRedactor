@@ -1,9 +1,12 @@
 import {IUser} from "../models/IUser";
 import {makeAutoObservable} from "mobx";
 import AuthService from "../Services/AuthService";
+import UserService from "../Services/UserService";
 import axios from "axios";
 import {IAuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
+import {IPassResponse} from "../models/response/PasswordResponse";
+import { AxiosResponse } from 'axios';
 
 export default  class Store {
     user = {} as IUser;
@@ -22,6 +25,30 @@ export default  class Store {
 
     setIsLoading(isLoading: boolean) {
         this.isLoading = isLoading;
+    }
+
+    async requestPasswordReset(email:string) : Promise<{ data?: IPassResponse; error?: string }> {
+        try{
+            const response = await UserService.requestReset(email);
+            console.log(response);
+            localStorage.setItem('passwordToken', response.data.passwordToken);
+            return {data:response.data};
+        }
+        catch (err:any){
+            return {error:err.response?.data?.message || "Unknown error"};
+        }
+    }
+
+    async resetPassword(token:string,newPassword:string) : Promise<{data?:IPassResponse; error?:string}> {
+        try{
+            const response = await UserService.resetPassword(token,newPassword);
+            console.log(response);
+            localStorage.removeItem('passwordToken');
+            return {data:}
+        }
+        catch (err:any){
+            console.log(err.response?.data?.message);
+        }
     }
 
     async login(email: string, password: string) {
@@ -80,6 +107,16 @@ export default  class Store {
             this.setIsLoading(false);
         }
     }
+
+    async checkIsResseting(){
+        this.setIsLoading(true);
+        try{}
+        catch(err:any){}
+        finally {
+            this.setIsLoading(false);
+        }
+    }
+
 
 
 

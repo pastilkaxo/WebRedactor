@@ -86,7 +86,7 @@ class UserController {
             }
             const {email} = req.body;
             const result = await userService.requestPasswordResetLink(email);
-            res.cookie('passwordToken',result.passwordToken,{maxAge:15*60*1000,httpOnly:true});
+            // res.cookie('passwordToken',result.passwordToken,{maxAge:15*60*1000,httpOnly:true});
             return res.json(result);
 
         }
