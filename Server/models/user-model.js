@@ -5,7 +5,7 @@ const UserSchema = new Schema({
     password: {type: String, required: true},
     isActivated: {type: Boolean, default: false},
     activationLink: {type: String},
-    roles: {type: String, ref: 'Role'},
+    roles: [{type: String, ref: 'Role'}],
     resetRequestedAt: {type: Date, default: null},
 })
 

@@ -17,7 +17,8 @@ class UserService {
         }
         const hashPassword = await bcrypt.hash(password, 4);
         const activationLink = uuidv4();
-        const user = await  UserModel.create({email,password:hashPassword,activationLink});
+        const userRole = await RoleModel.findOne({ roleName: "USER" });
+        const user = await  UserModel.create({email,password:hashPassword,activationLink,roles:[userRole.roleName]});
         await mailService.sendActivationMail(email,`${process.env.API_URL}/api/activate/${activationLink}`);
 
         const userDto = new UserDto(user);
@@ -108,6 +109,7 @@ class UserService {
         }
         user.password = await bcrypt.hash(newPassword, 4);
         await user.save();
+        return {message:"Пароль умпешно измненён."}
     }
 
 }
