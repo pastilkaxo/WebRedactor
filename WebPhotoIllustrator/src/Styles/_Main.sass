@@ -14,18 +14,29 @@
 
 #section1
     gap: clamp(10px, 5vw, 40px)
-    background-image: url("/public/Images/HomePage/bg1.png")
-    background-size: cover
+    background: linear-gradient(149deg, rgba(24,187,156,1) 0%, #D1FF3B 42%, #1ef00f 72%, #28FCC5 100%)
+    animation: gradient 10s infinite linear // 10s - скорость анимации
+    background-size: 400% // Можно менять и подбирать интенсивность
     background-position: center
     padding: clamp(15px, 5vw, 40px)
     flex-direction: column
     min-height: 100vh
 
+@keyframes gradient
+    0%
+        background-position: 80% 0%
+
+    50%
+        background-position: 20% 100%
+
+    100%
+        background-position: 80% 0%
+
 // Планшеты (до 768px)
 @media (max-width: 768px)
     #section1
         padding: 20px
-        justify-content: start
+        justify-content: center
         & .regForm
             width: 90%
             max-width: 350px

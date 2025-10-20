@@ -3,7 +3,6 @@ import { Box, TextField, Button, Typography, Stack, Slide } from '@mui/material'
 import {Context} from "../../../index";
 import {observer} from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
-import UserService from "../../../Services/UserService";
 import ErrorAlert from "../../ErrorAlerts/ErrorAlert";
 
 interface ResetProps {
@@ -17,6 +16,7 @@ function ResetForm() {
     const [serverMessage, setServerMessage] = useState<string | null>(null);
     const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null);
     const navigator = useNavigate();
+    const {store} = useContext(Context);
 
     const validate = () => {
         const newErrors: typeof errors = {};
@@ -35,7 +35,11 @@ function ResetForm() {
         e.preventDefault();
         try{
             if(validate()){
-
+                const token = localStorage.getItem("passwordToken");
+                if(token){
+                    const response = await store.resetPassword(token, password);
+                    console.log(response.message);
+                }
             }
         }
         catch(error){

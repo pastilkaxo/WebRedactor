@@ -22,21 +22,21 @@ function App() {
     const {store} = useContext(Context);
     useEffect(() => {
         if(localStorage.getItem("token")){
-            store.checkAuth();
-        }
+          store.checkAuth();
+      }
     }, []);
 
   return (
     <Router>
     <div className="wrapper d-flex min-vh-100">
-        <Header  />
+        {store.isAuth ? <Header  /> : null}
         <div className="flex-grow-1">
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Main  />} />
-              <Route path="/storage" element={<Storage />} />
-              <Route path="/editor" element={<Editor />} />
-              <Route path="/profile" element={<Profile/>} />
+              <Route path="/storage" element={store.isAuth ?<Storage/> : <Main/>} />
+              <Route path="/editor" element={store.isAuth ?<Editor/> : <Main/>} />
+              <Route path="/profile" element={store.isAuth ?<Profile/> : <Main/>} />
                 <Route path="/password/reset" element={<ResetForm/>} />
             </Routes>
           </main>

@@ -39,15 +39,15 @@ export default  class Store {
         }
     }
 
-    async resetPassword(token:string,newPassword:string) : Promise<{data?:IPassResponse; error?:string}> {
+    async resetPassword(token:string,newPassword:string) : Promise<{message?:string; error?:string}> {
         try{
             const response = await UserService.resetPassword(token,newPassword);
             console.log(response);
             localStorage.removeItem('passwordToken');
-            return {data:}
+            return {message:response.data.message}
         }
         catch (err:any){
-            console.log(err.response?.data?.message);
+            return {error:err.response?.data?.message || "Unknown error"};
         }
     }
 

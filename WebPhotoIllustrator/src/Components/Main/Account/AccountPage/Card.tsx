@@ -40,7 +40,10 @@ function ProfileCard(){
         <Card>
         <Divider />
             <DesktopStack/>
-            <MobileStack/>
+            <MobileStack />
+            {users.map((user) => <div key={user.id}>
+                {user.email}
+            </div>)}
         <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
                 <Button size="sm" variant="outlined" color="neutral">
@@ -48,6 +51,9 @@ function ProfileCard(){
                 </Button>
                 <Button size="sm" variant="solid">
                     Save
+                    </Button>
+                    <Button size="sm" variant="solid" onClick={getUser}>
+                    Fetch Users
                 </Button>
             </CardActions>
         </CardOverflow>

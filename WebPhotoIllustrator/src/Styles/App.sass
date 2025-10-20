@@ -17,7 +17,9 @@ html
     font-family: "Roboto"
 
 body
-    background-color: #f0f0f0
+    background: linear-gradient(149deg, rgba(24,187,156,1) 0%, #D1FF3B 42%, #1ef00f 72%, #28FCC5 100%)
+    animation: gradient 10s infinite linear // 10s - скорость анимации
+    background-size: 400% // Можно менять и подбирать интенсивность
     color: #333
 
 .roboto-font
@@ -47,3 +49,13 @@ body
 .main-content
     height: 100vh
     overflow-y: auto
+
+@keyframes gradient
+    0%
+        background-position: 80% 0%
+
+    50%
+        background-position: 20% 100%
+
+    100%
+        background-position: 80% 0%

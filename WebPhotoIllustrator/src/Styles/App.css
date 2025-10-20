@@ -760,18 +760,30 @@ canvas:active {
 
 #section1 {
   gap: clamp(10px, 5vw, 40px);
-  background-image: url("/public/Images/HomePage/bg1.png");
-  background-size: cover;
+  background: linear-gradient(149deg, rgb(24, 187, 156) 0%, #D1FF3B 42%, #1ef00f 72%, #28FCC5 100%);
+  animation: gradient 10s infinite linear;
+  background-size: 400%;
   background-position: center;
   padding: clamp(15px, 5vw, 40px);
   flex-direction: column;
   min-height: 100vh;
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 80% 0%;
+  }
+  50% {
+    background-position: 20% 100%;
+  }
+  100% {
+    background-position: 80% 0%;
+  }
+}
 @media (max-width: 768px) {
   #section1 {
     padding: 20px;
-    justify-content: start;
+    justify-content: center;
   }
   #section1 .regForm {
     width: 90%;
@@ -903,7 +915,9 @@ html {
 }
 
 body {
-  background-color: #f0f0f0;
+  background: linear-gradient(149deg, rgb(24, 187, 156) 0%, #D1FF3B 42%, #1ef00f 72%, #28FCC5 100%);
+  animation: gradient 10s infinite linear;
+  background-size: 400%;
   color: #333;
 }
 
@@ -938,4 +952,16 @@ body {
 .main-content {
   height: 100vh;
   overflow-y: auto;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 80% 0%;
+  }
+  50% {
+    background-position: 20% 100%;
+  }
+  100% {
+    background-position: 80% 0%;
+  }
 }/*# sourceMappingURL=App.css.map */
