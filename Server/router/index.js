@@ -20,4 +20,5 @@ router.get('/activate/:link',tokenController.activate);
 router.get('/refresh',tokenController.refresh);
 router.get('/users',authMiddleware,roleMiddleware(["ADMIN"]),userController.getUsers);
 
+
 module.exports = router;

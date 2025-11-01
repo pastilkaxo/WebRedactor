@@ -12,6 +12,8 @@ export default  class Store {
     user = {} as IUser;
     isAuth = false;
     isLoading = false;
+    isEditing = false;
+    wantToResetPassword = false;
     constructor() {
         makeAutoObservable(this);
     }
@@ -27,24 +29,37 @@ export default  class Store {
         this.isLoading = isLoading;
     }
 
-    async requestPasswordReset(email:string) : Promise<{ data?: IPassResponse; error?: string }> {
+    setWantToResetPass(wantToResetPassword: boolean) {
+        this.wantToResetPassword = wantToResetPassword;
+    }
+
+    async requestPasswordReset(email: string): Promise<{ data?: IPassResponse; error?: string }> {
+        this.setIsLoading(true);
         try{
             const response = await UserService.requestReset(email);
             console.log(response);
             localStorage.setItem('passwordToken', response.data.passwordToken);
+            this.setWantToResetPass(true);
             return {data:response.data};
         }
         catch (err:any){
             return {error:err.response?.data?.message || "Unknown error"};
         }
+        finally {
+            this.setIsLoading(false);
+        }
     }
 
     async resetPassword(token:string,newPassword:string) : Promise<{message?:string; error?:string}> {
-        try{
-            const response = await UserService.resetPassword(token,newPassword);
-            console.log(response);
-            localStorage.removeItem('passwordToken');
-            return {message:response.data.message}
+        try {
+            if (this.wantToResetPassword && localStorage.getItem('passwordToken')) {
+                const response = await UserService.resetPassword(token,newPassword);
+                console.log(response);
+                localStorage.removeItem('passwordToken');
+                this.setWantToResetPass(false);
+                return {message:response.data.message}
+            }
+             return {message:"Вы не можете поменять пароль!"}
         }
         catch (err:any){
             return {error:err.response?.data?.message || "Unknown error"};
