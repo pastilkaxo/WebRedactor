@@ -2,15 +2,22 @@ import React,{useRef,useState,useEffect} from "react"
 
 import { IconButton } from "blocksin-system";
 import { Canvas, Rect, Circle, } from "fabric";
-import {SquareIcon,CircleIcon} from "sebikostudio-icons"
+import { SquareIcon, CircleIcon } from "sebikostudio-icons"
 
+import CanvasSettings from "./CanvasSettings";
+import Cropping from "./Cropping";
+import CroppingSettings from "./CroppingSettings";
 import Settings from "./Settings";
+import { handleObjectMoving, clearGuideLines } from "./snappingHelpers";
 import Video from "./Video";
+import LayersList from "./LayersList";
 
 export default function CanvasApp() {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
-  const [hasVideo, setHasVideo] = useState(false); // добавляем состояние для видео
+  const [hasVideo, setHasVideo] = useState(false);
+  const [guidelines, setGuideLines] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -21,6 +28,14 @@ export default function CanvasApp() {
       initCanvas.backgroundColor = "#ffff";
       initCanvas.renderAll();
       setCanvas(initCanvas);
+
+      initCanvas.on("object:moving", (event) => {
+        handleObjectMoving(initCanvas,event.target,guidelines,setGuideLines)
+      });
+
+      initCanvas.on("object:modified", () => {
+        clearGuideLines(initCanvas, guidelines, setGuideLines);
+      });
 
       return () => {
         initCanvas.dispose();
@@ -52,10 +67,15 @@ export default function CanvasApp() {
       canvas.add(circle);
     }
   }
+
+  const handleFramesUpdated = () => {
+    setRefreshKey((prevKey) => prevKey + 1);
+  }
   
   return (
     <div className='CanvasApp'>
       <div className='Toolbar darkmode'>
+        <Cropping canvas={canvas} onFrameUpdated={handleFramesUpdated} />
         <Video canvas={canvas} canvasRef={canvasRef}/>
         <IconButton onClick={addRectangle} variant="ghost" size="medium">
           <SquareIcon/>
@@ -65,7 +85,12 @@ export default function CanvasApp() {
         </IconButton>
       </div>
       <canvas id='canvas' ref={canvasRef} />
-      <Settings canvas={canvas} />
+      <div className="SettingsGroup">
+        <Settings canvas={canvas} />
+        <CanvasSettings canvas={canvas} />
+        <CroppingSettings canvas={canvas} refreshKey={refreshKey} />
+        <LayersList canvas={canvas}/>
+      </div>
     </div>
   )
 }

@@ -2,13 +2,14 @@ import React,{useState,useEffect} from "react"
 
 import {Input} from "blocksin-system"
 
-
 export default function Settings({ canvas }) {
   const [selectedObject, setSelectedObject] = useState(null);
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [diameter, setDiameter] = useState("")
-  const [color,setColor] = useState("")
+  const [color, setColor] = useState("")
+  const [opacity, setOpacity] = useState("")
+  
 
   useEffect(() => {
     if (canvas) {
@@ -34,6 +35,7 @@ export default function Settings({ canvas }) {
   const handleObjectSelection = (object) => {
     if (!object) return
     setSelectedObject(object);
+    setOpacity(object.opacity);
     switch (object.type) {
     case "rect":
       setWidth(Math.round(object.width * object.scaleX));
@@ -57,6 +59,7 @@ export default function Settings({ canvas }) {
     setHeight("");
     setColor("");
     setDiameter("");
+    setOpacity("");
   }
 
   const handleWidthChange = (e) => {
@@ -100,28 +103,42 @@ export default function Settings({ canvas }) {
     }
   }
 
+  const handleOpacityChange = (e) => {
+    const value = e.target.value;
+    setOpacity(value);
+    if (selectedObject) {
+      selectedObject.set({ opacity:value });
+      canvas.renderAll();
+    }
+  }
+
 
 
   return (    
     <div className='Settings darkmode'>
       {selectedObject && selectedObject.type === "rect" && (
         <>
-          <Input field label="Width" value={width} onChange={handleWidthChange} />
-          <Input field label="Height" value={ height } onChange={handleHeightChange}  />
+          <Input fluid label="Width" value={width} onChange={handleWidthChange} placeholder="Enter the width"/>
+          <Input fluid label="Height" value={height} onChange={handleHeightChange} placeholder="Enter the height"/>
+          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
         </>
       )}
       {selectedObject && selectedObject.type === "circle" && (
         <>
-          <Input field label="Diameter" value={diameter} onChange={handleDiameterChange} />
+          <Input fluid label="Diameter" value={diameter} onChange={handleDiameterChange} placeholder="Enter the diameter"/>
+          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
         </>
       )}
       {selectedObject && (
-        <input
+        <>
+                  <input
           type="color"
           value={color}
           onChange={handleColorChange}
-          style={{ border: "1px solid black", background: "white", width: "100%", height: "40px" }}
-        />
+            style={{ border: "1px solid black", background: "white", width: "100%", height: "40px" }}
+          />
+        </>
+        
       )}
     </div>
   )
