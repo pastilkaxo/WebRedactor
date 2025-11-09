@@ -7,6 +7,7 @@ const router = require("./router/index.js");
 const errorMiddleware = require("./middlewares/error-middleware");
 
 const PORT = process.env.PORT || 5000;
+const SERVER_HOST = process.env.SERVER_HOST || "localhost";
 const app = express();
 
 
@@ -25,7 +26,7 @@ const start = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    app.listen(PORT, () => console.log("Сервер запущен на http://localhost:5000"));
+    app.listen(PORT,SERVER_HOST, () => console.log("Сервер запущен на http://localhost:5000"));
   }
   catch(err){
     console.log(err);

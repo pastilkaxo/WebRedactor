@@ -1,13 +1,16 @@
-import { Canvas, Rect, Cirlce, Circle, } from 'fabric';
-import React,{useRef,useState,useEffect} from 'react'
-import { IconButton } from 'blocksin-system';
+import React,{useRef,useState,useEffect} from "react"
+
+import { IconButton } from "blocksin-system";
+import { Canvas, Rect, Circle, } from "fabric";
 import {SquareIcon,CircleIcon} from "sebikostudio-icons"
-import Settings from './Settings';
-import Video from './Video';
+
+import Settings from "./Settings";
+import Video from "./Video";
 
 export default function CanvasApp() {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
+  const [hasVideo, setHasVideo] = useState(false); // добавляем состояние для видео
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -53,13 +56,13 @@ export default function CanvasApp() {
   return (
     <div className='CanvasApp'>
       <div className='Toolbar darkmode'>
+        <Video canvas={canvas} canvasRef={canvasRef}/>
         <IconButton onClick={addRectangle} variant="ghost" size="medium">
           <SquareIcon/>
         </IconButton>
         <IconButton onClick={addCircle} variant="ghost" size="medium">
           <CircleIcon/>
         </IconButton>
-        <Video canvas={canvas} canvasRef={canvasRef}/>
       </div>
       <canvas id='canvas' ref={canvasRef} />
       <Settings canvas={canvas} />

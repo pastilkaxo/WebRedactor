@@ -14,7 +14,7 @@ class MailService {
         })
     }
     async sendActivationMail(to,link) {
-        await this.transporter.sendMail({
+                    await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to:to,
             subject:"Activation Mail " + process.env.API_URL,
@@ -27,10 +27,11 @@ class MailService {
 </div>
                 `
         })
+
     }
 
     async sendPasswordResetLink (to,link) {
-        await this.transporter.sendMail({
+                    await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to:to,
             subject:"Reset Password " + process.env.CLIENT_URL,
@@ -42,6 +43,7 @@ class MailService {
             </div>
             `
         })
+
     }
 }
 

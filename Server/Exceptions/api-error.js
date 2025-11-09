@@ -19,4 +19,9 @@ module.exports = class ApiError extends Error {
     static NoAccess() {
         return new ApiError(403, "У вас нет доступа к этому ресурсу!");
     }
+
+    static EmailLimit() {
+        return new ApiError(550, "Email limit exceed!");
+    }
+    
 }

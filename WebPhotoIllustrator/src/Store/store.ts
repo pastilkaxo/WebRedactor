@@ -1,5 +1,5 @@
 import {IUser} from "../models/IUser";
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, observable} from "mobx";
 import AuthService from "../Services/AuthService";
 import UserService from "../Services/UserService";
 import axios from "axios";
@@ -12,17 +12,27 @@ export default  class Store {
     user = {} as IUser;
     isAuth = false;
     isLoading = false;
+    error = "";
     isEditing = false;
     wantToResetPassword = false;
+    isActivated = false;
     constructor() {
         makeAutoObservable(this);
     }
+    setError(error: string) {
+        this.error = error;
+    }
+
     setAuth(isAuth: boolean) {
         this.isAuth = isAuth;
     }
 
     setUser(user: IUser) {
         this.user = user;
+    }
+
+    setIsActivated(isActivated:boolean) {
+        this.isActivated = isActivated;
     }
 
     setIsLoading(isLoading: boolean) {
@@ -42,8 +52,9 @@ export default  class Store {
             this.setWantToResetPass(true);
             return {data:response.data};
         }
-        catch (err:any){
-            return {error:err.response?.data?.message || "Unknown error"};
+        catch (err: any) {
+            this.setError(err.response?.data?.message)
+            return { error: err.response?.data?.message || "Unknown error" };
         }
         finally {
             this.setIsLoading(false);
@@ -61,7 +72,8 @@ export default  class Store {
             }
              return {message:"Вы не можете поменять пароль!"}
         }
-        catch (err:any){
+        catch (err: any) {
+            this.setError(err.response?.data?.message)
             return {error:err.response?.data?.message || "Unknown error"};
         }
     }
@@ -71,11 +83,15 @@ export default  class Store {
             const response = await AuthService.login(email, password);
             console.log(response);
             localStorage.setItem("token", response.data.accessToken);
-            this.setAuth(true);
-            this.setUser(response.data.user);
+            await this.checkAuth();
+            if (this.user && !this.user.isActivated) {
+                await this.logout(); 
+                 this.setError("Аккаунт не активирован. Проверьте вашу почту.");
+            }
 
         }
-        catch(err:any){
+        catch (err: any) {
+            this.setError(err.response?.data?.message)
             console.log(err.response?.data?.message);
         }
     }
@@ -85,11 +101,14 @@ export default  class Store {
             const response = await AuthService.register(email, password);
             console.log(response);
             localStorage.setItem("token", response.data.accessToken);
-            this.setAuth(true);
-            this.setUser(response.data.user);
+            await this.checkAuth();
+            if (this.user && !this.user.isActivated) {
+            await this.logout(); 
+            }
+            return true;
         }
-        catch(err:any){
-            console.log(err.response?.data?.message);
+        catch (err: any) {
+            this.setError(err.response?.data?.message)
         }
     }
 
@@ -112,21 +131,19 @@ export default  class Store {
             const response = await axios.get<IAuthResponse>(`${API_URL}/refresh`,{withCredentials:true});
             console.log(response);
             localStorage.setItem("token", response.data.accessToken);
-            this.setAuth(true);
-            this.setUser(response.data.user);
+            this.setIsActivated(response.data.user.isActivated);
+            if (this.isActivated) {
+                this.setAuth(true);
+                this.setUser(response.data.user);
+            }
+            else {
+                this.setAuth(false);
+            }
         }
-        catch(err:any){
+        catch (err: any) {
+            this.setError(err.response?.data?.message)
             console.log(err.response?.data?.message);
         }
-        finally {
-            this.setIsLoading(false);
-        }
-    }
-
-    async checkIsResseting(){
-        this.setIsLoading(true);
-        try{}
-        catch(err:any){}
         finally {
             this.setIsLoading(false);
         }

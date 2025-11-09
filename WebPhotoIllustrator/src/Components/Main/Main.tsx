@@ -1,7 +1,9 @@
-import React,{useContext} from 'react';
-import Auth from './AuthForm/Auth';
-import { Context } from '../..';
-import { observer } from 'mobx-react-lite';
+import React,{useContext} from "react";
+
+import { observer } from "mobx-react-lite";
+
+import { Context } from "../..";
+import Auth from "./AuthForm/Auth";
 
 function Main() {
   const { store } = useContext(Context);
