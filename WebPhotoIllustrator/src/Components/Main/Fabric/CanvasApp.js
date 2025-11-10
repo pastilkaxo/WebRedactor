@@ -1,8 +1,8 @@
 import React,{useRef,useState,useEffect} from "react"
 
 import { IconButton } from "blocksin-system";
-import { Canvas, Rect, Circle, } from "fabric";
-import { SquareIcon, CircleIcon } from "sebikostudio-icons"
+import { Canvas, Rect, Circle, Textbox } from "fabric";
+import { SquareIcon, CircleIcon,TextIcon } from "sebikostudio-icons"
 
 import CanvasSettings from "./CanvasSettings";
 import Cropping from "./Cropping";
@@ -11,6 +11,7 @@ import Settings from "./Settings";
 import { handleObjectMoving, clearGuideLines } from "./snappingHelpers";
 import Video from "./Video";
 import LayersList from "./LayersList";
+import FabricAssist from "./fabricAssist";
 
 export default function CanvasApp() {
   const canvasRef = useRef(null);
@@ -68,6 +69,28 @@ export default function CanvasApp() {
     }
   }
 
+    const addText = () => {
+    if (canvas) {
+      const textbox = new Textbox(
+        "Text",{
+          top: 150,
+          left: 150,
+          width: 200,
+          fontSize:20,
+          fill: "#333",
+          lockScalingFlip: true,
+          editable: true,
+          lockSclingX: false,
+          lockScalingY: false,
+          fontFamily: "OpenSans",
+          textAlign: "left",
+        
+        
+      })
+      canvas.add(textbox);
+    }
+  }
+
   const handleFramesUpdated = () => {
     setRefreshKey((prevKey) => prevKey + 1);
   }
@@ -83,7 +106,11 @@ export default function CanvasApp() {
         <IconButton onClick={addCircle} variant="ghost" size="medium">
           <CircleIcon/>
         </IconButton>
+        <IconButton onClick={addText} variant="ghost" size="medium">
+          <TextIcon/>
+        </IconButton>
       </div>
+      <FabricAssist canvas={canvas}/>
       <canvas id='canvas' ref={canvasRef} />
       <div className="SettingsGroup">
         <Settings canvas={canvas} />

@@ -2,6 +2,7 @@ import {IUser} from "../models/IUser";
 import {makeAutoObservable, observable} from "mobx";
 import AuthService from "../Services/AuthService";
 import UserService from "../Services/UserService";
+import GptService from "../Services/GptService";
 import axios from "axios";
 import {IAuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
@@ -41,6 +42,20 @@ export default  class Store {
 
     setWantToResetPass(wantToResetPassword: boolean) {
         this.wantToResetPassword = wantToResetPassword;
+    }
+
+    async generateText(prompt: string): Promise<{ generatedText?: string; error?: string }> { 
+        this.setIsLoading(true);
+        try {  
+            const response = await GptService.generateText(prompt);
+            console.log(response);
+            return { generatedText: response.data.generatedText };
+        } catch (err: any) {
+            this.setError(err.response?.data?.message);
+            return { error: err.response?.data?.message || "Unknown error" };
+        } finally {
+            this.setIsLoading(false);
+        }
     }
 
     async requestPasswordReset(email: string): Promise<{ data?: IPassResponse; error?: string }> {

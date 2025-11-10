@@ -49,6 +49,10 @@ export default function Settings({ canvas }) {
       setColor(object.fill);
       setDiameter(Math.round(object.radius * 2 * object.scaleX));
       break;
+    case "textbox":
+        setColor(object.fill);
+        
+      break;
     default:
       break;
     }
@@ -120,13 +124,11 @@ export default function Settings({ canvas }) {
         <>
           <Input fluid label="Width" value={width} onChange={handleWidthChange} placeholder="Enter the width"/>
           <Input fluid label="Height" value={height} onChange={handleHeightChange} placeholder="Enter the height"/>
-          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
         </>
       )}
       {selectedObject && selectedObject.type === "circle" && (
         <>
           <Input fluid label="Diameter" value={diameter} onChange={handleDiameterChange} placeholder="Enter the diameter"/>
-          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
         </>
       )}
       {selectedObject && (
@@ -137,6 +139,7 @@ export default function Settings({ canvas }) {
           onChange={handleColorChange}
             style={{ border: "1px solid black", background: "white", width: "100%", height: "40px" }}
           />
+          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
         </>
         
       )}

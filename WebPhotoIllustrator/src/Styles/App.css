@@ -425,6 +425,9 @@ body {
   padding: 16px;
   height: 200px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--background-neutral-container) rgba(0, 0, 0, 0.15);
 }
 .layersList ul {
   list-style: none;

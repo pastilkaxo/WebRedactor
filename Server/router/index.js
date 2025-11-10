@@ -6,7 +6,8 @@ const router = new Router();
 const {body} = require("express-validator");
 const authMiddleware = require("../middlewares/auth-middleware");
 const errorMiddleware = require("../middlewares/error-middleware.js")
-const roleMiddleware = require("../middlewares/role-middleware")
+const roleMiddleware = require("../middlewares/role-middleware");
+const gptController = require("../controllers/gpt-controller.js")
 
 router.post("/register",
     body("email").isEmail(),
@@ -15,7 +16,8 @@ router.post("/register",
 router.post("/login",authController.login);
 router.post("/logout",authController.logout);
 router.post("/password/forgot",userController.requestPasswordResetLink);
-router.post("/password/reset",userController.resetPassword);
+router.post("/password/reset", userController.resetPassword);
+router.post("/generate-text", gptController.generateText);
 router.get('/activate/:link',tokenController.activate);
 router.get('/refresh',tokenController.refresh);
 router.get('/users',authMiddleware,roleMiddleware(["ADMIN"]),userController.getUsers);
