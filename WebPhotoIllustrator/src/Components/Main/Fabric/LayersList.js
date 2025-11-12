@@ -3,7 +3,7 @@ import { Canvas } from 'fabric';
 import { IconButton,Flex } from 'blocksin-system';
 import { ArrowUpIcon, ArrowDownIcon,EyeClosedIcon,EyeOpenIcon } from "sebikostudio-icons"
 
-function LayersList({canvas}) {
+function LayersList({canvas,showLayers}) {
     const [layers, setLayers] = useState([]);
     const [selectedLayer, setSelectedLayer] = useState(null);
 
@@ -144,7 +144,7 @@ function LayersList({canvas}) {
     },[canvas])
 
   return (
-      <div className='layersList CanvasSettings darkmode'>
+      <div className='layersList CanvasSettings darkmode' style={showLayers ? {display:"flex"} : {display:"none"}}>
           <Flex fluid justify="start" style={{marginBottom:16}} gap={100}>
               <IconButton size='small' onClick={() => moveSelectedLayer("up")} disabled={!selectedLayer || layers[0]?.id === selectedLayer.id}> 
                   <ArrowUpIcon/>

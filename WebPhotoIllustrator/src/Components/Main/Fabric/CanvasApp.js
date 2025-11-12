@@ -2,7 +2,7 @@ import React,{useRef,useState,useEffect} from "react"
 
 import { IconButton } from "blocksin-system";
 import { Canvas, Rect, Circle, Textbox } from "fabric";
-import { SquareIcon, CircleIcon,TextIcon } from "sebikostudio-icons"
+import { SquareIcon, CircleIcon,TextIcon,LayersIcon } from "sebikostudio-icons"
 
 import CanvasSettings from "./CanvasSettings";
 import Cropping from "./Cropping";
@@ -12,6 +12,9 @@ import { handleObjectMoving, clearGuideLines } from "./snappingHelpers";
 import Video from "./Video";
 import LayersList from "./LayersList";
 import FabricAssist from "./fabricAssist";
+import StyleEditor from "./StyleEditor";
+import FileExport from "./FileExport";
+import { Link } from "react-router-dom";
 
 export default function CanvasApp() {
   const canvasRef = useRef(null);
@@ -19,7 +22,25 @@ export default function CanvasApp() {
   const [hasVideo, setHasVideo] = useState(false);
   const [guidelines, setGuideLines] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showLayers, setShowLayers] = useState(true);
 
+  const extendObjectWithCustomProps = (object) => {
+    object.styleID = object.styleID || null;
+    object.zIndex = object.zIndex || 0;
+    object.id = object.id || `obj-${Date.now()}`;
+
+    const originalToObject = object.toObject;
+    object.toObject = function (propertiesToInclude = []) {
+      return originalToObject.call(this,[
+          ...propertiesToInclude,
+          "styleID",
+          "zindex",
+          "id"
+        ]
+      )
+    }
+  }
+ 
   useEffect(() => {
     if (canvasRef.current) {
       const initCanvas = new Canvas(canvasRef.current, {
@@ -29,6 +50,11 @@ export default function CanvasApp() {
       initCanvas.backgroundColor = "#ffff";
       initCanvas.renderAll();
       setCanvas(initCanvas);
+
+
+      initCanvas.on("object:added", (event) => { 
+        extendObjectWithCustomProps(event.target);
+      });
 
       initCanvas.on("object:moving", (event) => {
         handleObjectMoving(initCanvas,event.target,guidelines,setGuideLines)
@@ -43,6 +69,10 @@ export default function CanvasApp() {
       }
     }
   }, [])
+
+  const handleShowLayer = () => {
+    showLayers ? setShowLayers(false) : setShowLayers(true);
+  }
 
   const addRectangle = () => {
     if (canvas) {
@@ -109,14 +139,24 @@ export default function CanvasApp() {
         <IconButton onClick={addText} variant="ghost" size="medium">
           <TextIcon/>
         </IconButton>
+        <IconButton onClick={handleShowLayer} variant="ghost" size="medium">
+          <LayersIcon/>
+        </IconButton>
+      </div>
+      <div className="TopNavBar darkmode">
+        <Link to="/">
+          <img src="./Images/logo.png" alt="logo" width={50}/>
+        </Link>
+        <FileExport canvas={canvas} />
       </div>
       <FabricAssist canvas={canvas}/>
       <canvas id='canvas' ref={canvasRef} />
       <div className="SettingsGroup">
         <Settings canvas={canvas} />
-        <CanvasSettings canvas={canvas} />
+        <CanvasSettings canvas={canvas}/>
         <CroppingSettings canvas={canvas} refreshKey={refreshKey} />
-        <LayersList canvas={canvas}/>
+        <LayersList canvas={canvas} showLayers={showLayers} />
+        <StyleEditor canvas={canvas}/>
       </div>
     </div>
   )

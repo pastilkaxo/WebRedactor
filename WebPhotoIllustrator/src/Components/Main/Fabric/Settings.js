@@ -139,7 +139,7 @@ export default function Settings({ canvas }) {
           onChange={handleColorChange}
             style={{ border: "1px solid black", background: "white", width: "100%", height: "40px" }}
           />
-          <Input fluid label="Opacity" type="number" value={ opacity } onChange={handleOpacityChange} placeholder="Enter the opacity"/>
+          <Input fluid label="Opacity" type="number" value={opacity} onChange={handleOpacityChange} placeholder="Enter the opacity" step={0.01} min={0} max={1} />
         </>
         
       )}
