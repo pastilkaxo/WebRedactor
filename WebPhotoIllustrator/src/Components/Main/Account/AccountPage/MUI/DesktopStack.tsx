@@ -1,5 +1,6 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 
+import localforage from "localforage";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import AspectRatio from "@mui/joy/AspectRatio";
@@ -10,15 +11,43 @@ import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import { Typography } from "@mui/material";
-import {observer} from  "mobx-react-lite";
+import { observer } from "mobx-react-lite";
+import Avatar from '@mui/material/Avatar';
+import ButtonBase from '@mui/material/ButtonBase';
 
 import {Context} from "../../../../../index";
 import {IUser} from "../../../../../models/IUser";
 import UserService from "../../../../../Services/UserService";
 
-function DesktopStack(){
+function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
   const {store} = useContext(Context);
   const [users, setUsers] = useState<IUser[]>([]);
+  const currentUserId = store.user.id;
+
+  const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const result = reader.result as string;
+        setAvatar(result);
+        await localforage.setItem(`avatar_${currentUserId}`, result);
+      }
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+          const stored = await localforage.getItem<string>(`avatar_${currentUserId}`);
+          if(stored) setAvatar(stored);
+    }
+  loadAvatar();
+  }, [currentUserId]);
+
+
 
   async function getUser(){
     try{
@@ -36,35 +65,40 @@ function DesktopStack(){
       sx={{ display: { xs: "none", md: "flex" }, my: 1 }}
     >
       <Stack direction="column" spacing={1}>
-        <AspectRatio
-          ratio="1"
-          maxHeight={200}
-          sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
-        >
-          <img
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-            srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
-            loading="lazy"
-            alt=""
-          />
-        </AspectRatio>
-        <IconButton
-          aria-label="upload new picture"
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          sx={{
-            bgcolor: "background.body",
-            position: "absolute",
-            zIndex: 2,
-            borderRadius: "50%",
-            left: 100,
-            top: 120,
-            boxShadow: "sm",
-          }}
-        >
-          <EditRoundedIcon />
-        </IconButton>
+          <ButtonBase
+            component="label"
+            role={undefined}
+            tabIndex={-1} 
+            aria-label="Avatar image"
+            sx={{
+              borderRadius: '40px',
+              '&:has(:focus-visible)': {
+                outline: '2px solid',
+                outlineOffset: '2px',
+              },
+      }}
+    >
+          <Avatar alt="Upload new avatar" src={avatar} style={{
+            width: 200,
+            height:200
+      }}/>
+      <input
+        type="file"
+        accept="image/*"
+        style={{
+          border: 0,
+          clip: 'rect(0 0 0 0)',
+          height: '1px',
+          margin: '-1px',
+          overflow: 'hidden',
+          padding: 0,
+          position: 'absolute',
+          whiteSpace: 'nowrap',
+          width: '1px',
+        }}
+        onChange={handleChangeAvatar}
+      />
+    </ButtonBase>
       </Stack>
       <Stack spacing={2} sx={{ flexGrow: 1 }}>
         <Stack spacing={1}>
@@ -72,8 +106,19 @@ function DesktopStack(){
           <FormControl
             sx={{ display: { sm: "flex-column", md: "flex-row" }, gap: 2 }}
           >
-            <Input size="sm" placeholder="First name" />
-            <Input size="sm" placeholder="Last name" sx={{ flexGrow: 1 }} />
+            <Input 
+                size="sm" 
+                placeholder="First name" 
+                value={firstName} 
+                onChange={(e) => setFirstName(e.target.value)}
+            />
+            <Input 
+                size="sm" 
+                placeholder="Last name" 
+                sx={{ flexGrow: 1 }} 
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+            />
           </FormControl>
         </Stack>
         <Stack direction="row" spacing={2}>
@@ -92,6 +137,7 @@ function DesktopStack(){
 
         </Stack>
         <Stack direction="row" spacing={1}>
+           <Button onClick={() => store.logout()}>Сменить пароль</Button>
           <Button onClick={() => store.logout()}>Выйти</Button>
         </Stack>
       </Stack>

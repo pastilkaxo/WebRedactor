@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react"
 
 import {Input} from "blocksin-system"
 
+
 export default function Settings({ canvas }) {
   const [selectedObject, setSelectedObject] = useState(null);
   const [width, setWidth] = useState("");
@@ -9,6 +10,7 @@ export default function Settings({ canvas }) {
   const [diameter, setDiameter] = useState("")
   const [color, setColor] = useState("")
   const [opacity, setOpacity] = useState("")
+  const [strokeWidth, setStrokeWidth] = useState(5)
   
 
   useEffect(() => {
@@ -43,6 +45,11 @@ export default function Settings({ canvas }) {
       setColor(object.fill);
       setDiameter("");
       break;
+    case "triangle":
+      setWidth(Math.round(object.width * object.scaleX));
+      setHeight(Math.round(object.height * object.scaleY));
+      setColor(object.fill);
+      break;
     case "circle":
       setWidth("");
       setHeight("");
@@ -51,8 +58,11 @@ export default function Settings({ canvas }) {
       break;
     case "textbox":
         setColor(object.fill);
-        
-      break;
+        break;
+    case "line":
+        setColor(object.stroke);
+        setStrokeWidth(object.strokeWidth);
+    break;
     default:
       break;
     }
@@ -64,6 +74,7 @@ export default function Settings({ canvas }) {
     setColor("");
     setDiameter("");
     setOpacity("");
+    setStrokeWidth(5);
   }
 
   const handleWidthChange = (e) => {
@@ -107,6 +118,17 @@ export default function Settings({ canvas }) {
     }
   }
 
+  const handleStrokeWidthChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    const initValue = parseInt(value, 10);
+
+    setStrokeWidth(initValue);
+    if (selectedObject && selectedObject.type === "line" && initValue >= 0) {
+      selectedObject.set({ strokeWidth: initValue });
+      canvas.renderAll();
+    }
+  }
+
   const handleOpacityChange = (e) => {
     const value = e.target.value;
     setOpacity(value);
@@ -120,7 +142,13 @@ export default function Settings({ canvas }) {
 
   return (    
     <div className='Settings darkmode'>
-      {selectedObject && selectedObject.type === "rect" && (
+      {selectedObject && selectedObject.type === "rect"  && (
+        <>
+          <Input fluid label="Width" value={width} onChange={handleWidthChange} placeholder="Enter the width"/>
+          <Input fluid label="Height" value={height} onChange={handleHeightChange} placeholder="Enter the height"/>
+        </>
+      )}
+      {selectedObject && selectedObject.type === "triangle"  && (
         <>
           <Input fluid label="Width" value={width} onChange={handleWidthChange} placeholder="Enter the width"/>
           <Input fluid label="Height" value={height} onChange={handleHeightChange} placeholder="Enter the height"/>
@@ -129,6 +157,11 @@ export default function Settings({ canvas }) {
       {selectedObject && selectedObject.type === "circle" && (
         <>
           <Input fluid label="Diameter" value={diameter} onChange={handleDiameterChange} placeholder="Enter the diameter"/>
+        </>
+      )}
+      {selectedObject && selectedObject.type === "line" && (
+        <>
+          <Input fluid label="Stroke Width" value={strokeWidth} onChange={handleStrokeWidthChange} placeholder="Enter the width"/>
         </>
       )}
       {selectedObject && (

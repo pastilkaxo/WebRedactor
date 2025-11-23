@@ -33,6 +33,7 @@
     "fabric": "^6.1.0",
     "fabricjs-react": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
+    "localforage": "^1.10.0",
     "mobx": "^6.15.0",
     "mobx-react-lite": "^4.1.1",
     "mongodb": "^6.17.0",

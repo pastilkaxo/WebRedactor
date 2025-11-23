@@ -16,13 +16,10 @@ function Profile() {
     <Box sx={{flex:1, width:"100%"}}>
       <Stack spacing={4} sx={{
         display: "flex",
-        maxWidth: "800px",
         mx: "auto",
-        mt: "100px",
         px: { xs: 2, md: 6 },
         py: { xs: 2, md: 3 },
       }}>
-        <Typography sx={{fontSize:"52px"}} align="center">My Account</Typography>
         <ProfileCard/>
       </Stack>
     </Box>

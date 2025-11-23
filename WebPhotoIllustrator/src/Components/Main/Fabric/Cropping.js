@@ -1,7 +1,7 @@
 import React from 'react'
 import { Rect } from "fabric"
 import { IconButton } from "blocksin-system"
-import { CropIcon } from "sebikostudio-icons"
+import { FrameIcon } from "sebikostudio-icons"
 
 
 function Cropping({canvas,onFrameUpdated}) {
@@ -56,7 +56,7 @@ function Cropping({canvas,onFrameUpdated}) {
     return (
         <div className='FrameComponent'>
             <IconButton variant="ghost" onClick={addFrameToCanvas}>
-                <CropIcon/>
+                <FrameIcon/>
             </IconButton>
       </div>
   )

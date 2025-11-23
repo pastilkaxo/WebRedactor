@@ -23,5 +23,9 @@ module.exports = class ApiError extends Error {
     static EmailLimit() {
         return new ApiError(550, "Email limit exceed!");
     }
+
+    static Internal(message, errors = []) {
+        return new ApiError(500, message, errors);
+    }
     
 }

@@ -324,6 +324,12 @@ body {
   max-height: 800px;
 }
 
+.ZoomControl input {
+  background: transparent;
+  color: white;
+  border: none;
+}
+
 .Settings,
 .CanvasSettings,
 .CroppingSettings {
