@@ -20,7 +20,10 @@ router.post("/password/reset", userController.resetPassword);
 router.post("/generate-text", gptController.generateText);
 router.get('/activate/:link',tokenController.activate);
 router.get('/refresh',tokenController.refresh);
-router.get('/users',authMiddleware,roleMiddleware(["ADMIN"]),userController.getUsers);
 
-
+router.get('/admin/users',authMiddleware, roleMiddleware(['ADMIN']), userController.getUsers);
+router.put('/admin/user/update', authMiddleware, roleMiddleware(['ADMIN']), userController.updateUser);
+router.post('/admin/user/block', authMiddleware, roleMiddleware(['ADMIN']), userController.blockUser);
+router.post('/admin/user/unblock', authMiddleware, roleMiddleware(['ADMIN']), userController.unblockUser);
+router.delete('/admin/user/:userId', authMiddleware, roleMiddleware(['ADMIN']), userController.deleteUser);
 module.exports = router;

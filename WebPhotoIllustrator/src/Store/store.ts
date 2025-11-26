@@ -17,6 +17,7 @@ export default  class Store {
     isEditing = false;
     wantToResetPassword = false;
     isActivated = false;
+    
     constructor() {
         makeAutoObservable(this);
     }

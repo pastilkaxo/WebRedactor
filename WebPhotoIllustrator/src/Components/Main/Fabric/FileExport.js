@@ -5,7 +5,7 @@ function FileExport({ canvas }) {
     const exportCanvas = () => {
         if (!canvas) return;
         
-        const json = canvas.toJSON();
+        const json = canvas.toJSON(["id", "styleID", "zIndex","name"]);
         const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -13,18 +13,19 @@ function FileExport({ canvas }) {
         link.click();
     }
 
-    const importCanvas = (e) => {
+    const importCanvas = async (e) => {
         if (!canvas) return;
         const file = e.target.files[0];
         if (file && file.type === "application/json") {
             const reader = new FileReader();
-            reader.onload = () => {
+            reader.onload = async () => {
                 try {
                     const json = JSON.parse(reader.result);
-                    canvas?.clear();
-                    canvas?.loadFromJSON(json, () => {
-                         canvas.renderAll();
+                    canvas.clear();
+                    await canvas.loadFromJSON(json, () => {
+                         canvas.requestRenderAll();
                     });
+                    console.log("Canvas loaded successfully");
                 }
                 catch (err) {
                     console.error("Can't load canvas from json.",err);

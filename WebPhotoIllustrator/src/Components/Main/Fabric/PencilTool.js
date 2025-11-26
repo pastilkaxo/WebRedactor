@@ -3,8 +3,8 @@ import { Button, Flex, Input, Separator } from "blocksin-system";
 import { PencilBrush } from 'fabric';
 import { Pencil1Icon } from "sebikostudio-icons"; // Предполагаемая иконка
 
-function PencilTool({ canvas }) {
-    const [isDrawing, setIsDrawing] = useState(false);
+function PencilTool({ canvas,isDrawing }) {
+    
     const [color, setColor] = useState("#000000");
     const [width, setWidth] = useState(5);
 
@@ -37,22 +37,8 @@ function PencilTool({ canvas }) {
         }
     }, [color, width, canvas, isDrawing]);
 
-    const toggleDrawing = () => {
-        setIsDrawing(!isDrawing);
-    };
-
     return (
-        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: '10px' }}>
-            <Button 
-                onClick={toggleDrawing} 
-                variant={isDrawing ? "primary" : "secondary"}
-                fullWidth
-            >
-                <Pencil1Icon style={{ marginRight: 5 }} />
-                {isDrawing ? "Stop Drawing" : "Start Drawing"}
-            </Button>
-
-            {isDrawing && (
+        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: '10px',color:"white",display:isDrawing ?"flex":"none" }}>
                 <div style={{ marginTop: 10 }}>
                      <label style={{ color: 'white', fontSize: 12 }}>Brush Color</label>
                     <Flex gap={50} align="center" style={{ marginBottom: 10 }}>
@@ -75,7 +61,6 @@ function PencilTool({ canvas }) {
                         fluid
                     />
                 </div>
-            )}
              <Separator />
         </Flex>
     );

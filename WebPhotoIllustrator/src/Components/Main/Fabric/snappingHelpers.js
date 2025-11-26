@@ -3,14 +3,12 @@ import { Line } from "fabric";
 const snappingDistance = 10;
 
 export const handleObjectMoving = (canvas, obj, guidelines, setGuideLines) => {
-    // 1. Получаем параметры Viewport (трансформации экрана)
     const vpt = canvas.viewportTransform;
     const zoom = canvas.getZoom();
-    const canvasWidth = canvas.width;  // Ширина HTML-элемента canvas (экрана)
-    const canvasHeight = canvas.height; // Высота HTML-элемента canvas (экрана)
+    const canvasWidth = canvas.width;  
+    const canvasHeight = canvas.height;
 
-    // 2. Рассчитываем координаты КРАЕВ ВИДИМОГО ЭКРАНА в координатах "мира"
-    // Формула: (Координата экрана - Сдвиг) / Масштаб
+
     
     const viewportLeft = (0 - vpt[4]) / vpt[0];
     const viewportTop = (0 - vpt[5]) / vpt[3];
@@ -20,10 +18,8 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuideLines) => {
     const viewportCenterX = (canvasWidth / 2 - vpt[4]) / vpt[0];
     const viewportCenterY = (canvasHeight / 2 - vpt[5]) / vpt[3];
 
-    // 3. Дистанция с учетом зума
     const dist = snappingDistance / zoom;
 
-    // 4. Координаты объекта
     const objWidth = obj.width * obj.scaleX;
     const objHeight = obj.height * obj.scaleY;
     
@@ -39,9 +35,7 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuideLines) => {
     clearGuideLines(canvas); 
     let snapped = false;
 
-    // ============================
-    // ВЕРТИКАЛЬНЫЕ ПРИВЯЗКИ (X)
-    // ============================
+
 
     // 1. ЛЕВЫЙ край ЭКРАНА (Viewport Left)
     // Магнитим левую сторону объекта к левой стороне экрана
@@ -75,9 +69,6 @@ export const handleObjectMoving = (canvas, obj, guidelines, setGuideLines) => {
         snapped = true;
     }
 
-    // ============================
-    // ГОРИЗОНТАЛЬНЫЕ ПРИВЯЗКИ (Y)
-    // ============================
 
     // 1. ВЕРХНИЙ край ЭКРАНА (Viewport Top)
     if (Math.abs(top - viewportTop) < dist) {

@@ -1,7 +1,8 @@
 import React,{useEffect,useState} from 'react'
 import { Canvas } from 'fabric';
 import { IconButton,Flex } from 'blocksin-system';
-import { ArrowUpIcon, ArrowDownIcon,EyeClosedIcon,EyeOpenIcon } from "sebikostudio-icons"
+import { ArrowUpIcon, ArrowDownIcon,EyeClosedIcon,EyeOpenIcon,    LockClosedIcon, 
+    LockOpen2Icon } from "sebikostudio-icons"
 
 function LayersList({canvas,showLayers}) {
     const [layers, setLayers] = useState([]);
@@ -25,6 +26,30 @@ function LayersList({canvas,showLayers}) {
         canvas.renderAll();
         updateLayers();
         setSelectedLayer({ ...selectedLayer, opacity: object.opacity });
+    }
+
+    const lockSelectedLayer = () => { 
+        if (!selectedLayer) return;
+        const object = canvas.getObjects().find((obj) => obj.id === selectedLayer.id);
+        if (!object) return;
+        const shouldLock = object.selectable;
+        object.set({
+            selectable: !shouldLock,
+            evented: !shouldLock,
+            lockMovementX: shouldLock,
+            lockMovementY: shouldLock,
+            lockRotation: shouldLock,
+            lockScalingX: shouldLock,
+            lockScalingY: shouldLock
+        })
+        if(shouldLock){
+           canvas.discardActiveObject();
+        }
+        else {
+            setSelectedLayer({ ...selectedLayer, locked: false });
+        }
+        canvas.renderAll();
+        updateLayers();
     }
 
     const moveSelectedLayer = (direction) => {
@@ -91,7 +116,8 @@ function LayersList({canvas,showLayers}) {
                     id: obj.id,
                     zIndex: obj.zIndex,
                     type: obj.type,
-                    opacity:obj.opacity,
+                    opacity: obj.opacity,
+                    locked: !obj.selectable
                 }));
             console.log('Filtered layers:', objects);
             setLayers([...objects].reverse());
@@ -101,7 +127,7 @@ function LayersList({canvas,showLayers}) {
     const handleObjectSelected = (e) => {
         const selectedObject = e.selected ? e.selected[0] : null;
         if (selectedObject) {
-            setSelectedLayer({id:selectedObject.id, opacity:selectedObject.opacity});
+            setSelectedLayer({id:selectedObject.id, opacity:selectedObject.opacity, locked: !selectedObject.selectable});
         }
         else {
             setSelectedLayer(null);
@@ -116,7 +142,8 @@ function LayersList({canvas,showLayers}) {
 
             setSelectedLayer({
                 id: object.id, 
-                opacity: object.opacity
+                opacity: object.opacity,
+                locked: !object.selectable
             });
         }
     }
@@ -155,12 +182,15 @@ function LayersList({canvas,showLayers}) {
               <IconButton size="small" onClick={hideSelectedLayer} disabled={!selectedLayer}>
                   {selectedLayer?.opacity === 0 ? <EyeClosedIcon/> : <EyeOpenIcon/>}
               </IconButton>
+                <IconButton size="small" onClick={lockSelectedLayer} disabled={!selectedLayer}>
+                  {selectedLayer?.locked ? <LockClosedIcon/> : <LockOpen2Icon/>}
+              </IconButton>
           </Flex>
           <ul>
               {layers.length === 0 ? (<p style={{color:"white", textAlign:"center"}}>No objects</p>) : null}
               {layers.map((layer) => (
                 <li key={layer.id} onClick={()=> selectLayerInCanvas(layer.id)} className={selectedLayer && layer.id === selectedLayer.id ? "selected-layer" : ""}>
-                     {layer.type} {layer.zIndex}
+                     {layer.type} {layer.zIndex}  <span style={{marginRight: 5}}>{layer.locked && "🔒"}</span>
                 </li>
             ))}    
         </ul>      

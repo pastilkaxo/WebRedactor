@@ -14,6 +14,50 @@ class UserController {
         }
     }
 
+    async blockUser(req, res, next) { 
+        try {
+            const { id } = req.params;
+            const userData = await userService.blockUser(id);
+            return res.json(userData);
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
+    async unblockUser(req, res, next) { 
+        try {
+            const { id } = req.params;
+            const userData = await userService.unblockUser(id);
+            return res.json(userData);
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
+    async deleteUser(req, res, next) { 
+        try {
+            const { id } = req.params;
+            const result = await userService.deleteUser(id);
+            return res.json(result);
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
+    async updateUser(req, res, next) { 
+        try {
+            const { id,updates } = req.body;
+            const userData = await userService.updateUser(id,updates);
+            return res.json(userData);
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
     async requestPasswordResetLink(req,res,next){
         try{
             const errors = validationResult(req);

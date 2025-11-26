@@ -89,7 +89,7 @@ function ImageTool({ canvas, showImageMenu }) {
     }
 
     return (
-        <Flex className='ImageTool CanvasSettings darkmode' gap={100} style={{ padding: '10px', flexDirection: 'column', display: showImageMenu ? 'flex' : 'none' }}>
+        <Flex className='ImageTool CanvasSettings darkmode' gap={100} style={{ color:"white",padding: '10px', flexDirection: 'column', display: showImageMenu ? 'flex' : 'none' }}>
             <input
                 ref={fileInputRef}
                 type="file"

@@ -19,6 +19,7 @@ import UserService from "../../../../Services/UserService";
 import ProfileView from "./ProfileView";
 import SettingsView from "./SettingsView";
 import ProjectsView from "./ProjectsView";
+import AdminView from "./AdminView";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -93,6 +94,7 @@ function ProfileCard(){
           <Tab label="Профиль" {...a11yProps(0)} />
           <Tab label="Проекты" {...a11yProps(1)} />
           <Tab label="Настройки" {...a11yProps(2)} />
+          {store.user.roles.includes("ADMIN") && <Tab label="Админ панель" {...a11yProps(3)} />}
         </Tabs>
       </AppBar>
       <Divider />
@@ -104,6 +106,9 @@ function ProfileCard(){
       </TabPanel>
       <TabPanel value={value} index={2}>
         <SettingsView/>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        {store.user.roles.includes("ADMIN") && <AdminView />}
       </TabPanel>
     </Card>
   )

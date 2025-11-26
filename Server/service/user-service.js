@@ -75,11 +75,6 @@ class UserService {
         return {...tokens,user: userDto}
     }
 
-    async getAllUsers() {
-        const users = await UserModel.find();
-        return users;
-    }
-
     async requestPasswordResetLink(email) {
         const user  = await UserModel.findOne({email});
         if(!user) {
@@ -111,6 +106,53 @@ class UserService {
         await user.save();
         return {message:"Пароль умпешно измненён."}
     }
+
+    // admin part
+
+    async getAllUsers() {
+        const users = await UserModel.find();
+        return users;
+    }
+
+    async blockUser(userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        user.isBlocked = true;
+        await user.save();
+        return user;
+    }
+
+    async unblockUser(userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        user.isBlocked = false;
+        await user.save();
+        return user;
+    }
+
+    async deleteUser(userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        await UserModel.findByIdAndDelete(userId);
+        return {message: "Пользователь успешно удалён."};
+    }
+
+    async updateUser(userId,updates){
+        const user = await UserModel.findByIdAndUpdate(userId, updates, { new: true });
+        if (!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        return user;
+    }
+
+
+
 
 }
 
