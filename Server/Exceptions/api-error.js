@@ -20,6 +20,10 @@ module.exports = class ApiError extends Error {
         return new ApiError(403, "У вас нет доступа к этому ресурсу!");
     }
 
+    static BlockedUser() {
+        return new ApiError(423, "Ваш аккаунт заблокирован. Обратитесь к администратору.");
+    }
+
     static EmailLimit() {
         return new ApiError(550, "Email limit exceed!");
     }

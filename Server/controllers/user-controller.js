@@ -16,8 +16,8 @@ class UserController {
 
     async blockUser(req, res, next) { 
         try {
-            const { id } = req.params;
-            const userData = await userService.blockUser(id);
+           const { userId } = req.body;
+            const userData = await userService.blockUser(userId);
             return res.json(userData);
         }
         catch (err) {
@@ -27,8 +27,8 @@ class UserController {
 
     async unblockUser(req, res, next) { 
         try {
-            const { id } = req.params;
-            const userData = await userService.unblockUser(id);
+            const { userId } = req.body;
+            const userData = await userService.unblockUser(userId);
             return res.json(userData);
         }
         catch (err) {
@@ -38,8 +38,8 @@ class UserController {
 
     async deleteUser(req, res, next) { 
         try {
-            const { id } = req.params;
-            const result = await userService.deleteUser(id);
+            const { userId } = req.params;
+            const result = await userService.deleteUser(userId);
             return res.json(result);
         }
         catch (err) {

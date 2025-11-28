@@ -1,17 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { IUser } from '../../../../models/IUser';
 import UserService from '../../../../Services/UserService';
+import { 
+    DataGrid, 
+    GridColDef, 
+    GridRenderCellParams, 
+    GridToolbar 
+} from '@mui/x-data-grid';
+import { 
+    Box, 
+    Button, 
+    Typography, 
+    IconButton, 
+    Chip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    TextField,
+    DialogActions,
+    Stack,
+    Tooltip
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Context } from '../../../..';
 
 const AdminView: React.FC = () => {
     const [users, setUsers] = useState<IUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const {store} = useContext(Context);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [editingUser, setEditingUser] = useState<IUser | null>(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
             const response = await UserService.fetchUsers();
-            setUsers(response.data);
+            const filteredUsers = response.data.filter((u: IUser) => {
+                const isMe = u._id === store.user._id;
+                const isAdmin = u.roles.includes('ADMIN');
+                return !isMe && !isAdmin;
+            })
+            setUsers(filteredUsers);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Ошибка при загрузке пользователей');
         } finally {
@@ -23,14 +58,15 @@ const AdminView: React.FC = () => {
         fetchUsers();
     }, []);
 
+
     const handleToggleBlock = async (user: IUser) => {
         try {
             if (user.isBlocked) {
-                await UserService.unblockUser(user.id);
+                await UserService.unblockUser(user._id);
             } else {
-                await UserService.blockUser(user.id);
+                await UserService.blockUser(user._id);
             }
-            fetchUsers();
+            fetchUsers(); 
         } catch (err: any) {
             alert(err.response?.data?.message || 'Произошла ошибка');
         }
@@ -47,53 +83,185 @@ const AdminView: React.FC = () => {
         }
     };
 
-    if (isLoading) {
-        return <div>Загрузка...</div>;
-    }
+
+    const handleOpenEdit = (user: IUser) => {
+        setEditingUser(user);
+        setFirstName(user.firstName || '');
+        setLastName(user.lastName || '');
+        setOpenEditModal(true);
+    };
+
+    const handleCloseEdit = () => {
+        setOpenEditModal(false);
+        setEditingUser(null);
+        setFirstName('');
+        setLastName('');
+    };
+
+    const handleSaveUser = async () => {
+        if (!editingUser) return;
+        try {
+            await UserService.updateUser(editingUser._id, { firstName, lastName });
+            handleCloseEdit();
+            fetchUsers();
+        } catch (err: any) {
+            alert(err.response?.data?.message || 'Не удалось обновить пользователя');
+        }
+    };
+
+
+    const columns: GridColDef[] = [
+        { field: '_id', headerName: 'ID', width: 220 },
+        { field: 'email', headerName: 'Email', width: 200, flex: 1 },
+        { field: 'firstName', headerName: 'Имя', width: 120 }, 
+        { field: 'lastName', headerName: 'Фамилия', width: 120 },
+        { 
+            field: 'isActivated', 
+            headerName: 'Активация', 
+            width: 140,
+            renderCell: (params: GridRenderCellParams) => (
+                <Chip 
+                    label={params.value ? 'Активирован' : 'Нет'} 
+                    color={params.value ? 'success' : 'warning'} 
+                    variant="outlined"
+                    size="small"
+                />
+            )
+        },
+        { 
+            field: 'isBlocked', 
+            headerName: 'Статус', 
+            width: 110,
+            renderCell: (params: GridRenderCellParams) => (
+                <Chip 
+                    label={params.value ? 'Заблокирован' : 'Активен'} 
+                    color={params.value ? 'error' : 'success'} 
+                    size="small"
+                />
+            )
+        },
+        {
+            field: 'actions',
+            headerName: 'Действия',
+            width: 150,
+            sortable: false,
+            renderCell: (params: GridRenderCellParams) => {
+                const user = params.row as IUser;
+                return (
+                    <Stack direction="row" spacing={1}>
+                        <Tooltip title={user.isBlocked ? "Разблокировать" : "Блокировать"}>
+                            <IconButton 
+                                color={user.isBlocked ? "success" : "warning"} 
+                                onClick={() => handleToggleBlock(user)}
+                            >
+                                {user.isBlocked ? <CheckCircleIcon /> : <BlockIcon />}
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Изменить">
+                            <IconButton color="primary" onClick={() => handleOpenEdit(user)}>
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Удалить">
+                            <IconButton color="error" onClick={() => handleDeleteUser(user._id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                );
+            },
+        },
+    ];
 
     if (error) {
-        return <div style={{ color: 'red' }}>{error}</div>;
+        return <div style={{ color: 'red', padding: 20 }}>{error}</div>;
     }
 
     return (
-        <div>
-            <h2>Управление пользователями</h2>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr style={{ borderBottom: '1px solid #ccc' }}>
-                        <th style={{ padding: '8px', textAlign: 'left' }}>Email</th>
-                        <th style={{ padding: '8px', textAlign: 'left' }}>ID</th>
-                        <th style={{ padding: '8px', textAlign: 'left' }}>Активация</th>
-                        <th style={{ padding: '8px', textAlign: 'left' }}>Статус</th>
-                        <th style={{ padding: '8px', textAlign: 'left' }}>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(user => (
-                        <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
-                            <td style={{ padding: '8px' }}>{user.email}</td>
-                            <td style={{ padding: '8px' }}>{user._id}</td>
-                            <td style={{ padding: '8px' }}>{user.isActivated ? 'Активирован' : 'Не активирован'}</td>
-                            <td style={{ padding: '8px' }}>{user.isBlocked ? 'Заблокирован' : 'Активен'}</td>
-                            <td style={{ padding: '8px' }}>
-                                <button onClick={() => handleToggleBlock(user)}>
-                                    {user.isBlocked ? 'Разблокировать' : 'Блокировать'}
-                                </button>
-                                <button onClick={() => alert('Редактирование в разработке')}>
-                                    Изменить
-                                </button>
-                                <button onClick={() => handleDeleteUser(user.id)}>
-                                    Удалить
-                                </button>
-                                 <button onClick={() => alert('Просмотр контента в разработке')}>
-                                    Контент
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <Box sx={{ height: 650, width: '100%', p: 2 }}>
+            <Typography  variant="h5" gutterBottom sx={{ fontSize: '1.2rem', fontWeight: 600 }}>
+                Пользователи
+            </Typography>
+            
+{/* Ограничиваем высоту для компактности */}
+            <Box sx={{ height: 500, width: '100%' }}>
+                <DataGrid
+                    rows={users}
+                    columns={columns}
+                    loading={isLoading}
+                    getRowId={(row) => row._id}
+                    
+                    density="compact" 
+                    
+                    initialState={{
+                        pagination: { paginationModel: { page: 0, pageSize: 10 } },
+                    }}
+                    pageSizeOptions={[5, 10, 20]}
+                    
+                    disableRowSelectionOnClick
+                    
+                    slots={{ toolbar: GridToolbar }} 
+                    slotProps={{
+                        toolbar: {
+                            showQuickFilter: true,
+                            quickFilterProps: { debounceMs: 500 },
+                        },
+                    }}
+                    
+                    sx={{
+                        border: 'none',
+                        '& .MuiDataGrid-cell': {
+                            fontSize: '0.85rem',
+                        },
+                        '& .MuiDataGrid-columnHeaders': {
+                            backgroundColor: '#f5f5f5',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold'
+                        },
+                        '& .MuiDataGrid-toolbarContainer': {
+                            paddingBottom: 1,
+                        }
+                    }}
+                />
+            </Box>
+    <Dialog open={openEditModal} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
+                <DialogTitle>Редактирование</DialogTitle>
+                <DialogContent>
+                    <Box component="form" sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <TextField
+                            label="Имя (First Name)"
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            autoFocus
+                        />
+                         <TextField
+                            label="Фамилия (Last Name)"
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                         <Typography variant="caption" color="textSecondary">
+                             ID: {editingUser?._id}
+                         </Typography>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseEdit} color="inherit">
+                        Отмена
+                    </Button>
+                    <Button onClick={handleSaveUser} variant="contained" color="primary">
+                        Сохранить
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
     );
 };
 

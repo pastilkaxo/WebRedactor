@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const router = require("./router/index.js");
+const projectRouter = require("./router/projectRouter.js");
 const errorMiddleware = require("./middlewares/error-middleware");
 
 const PORT = process.env.PORT || 5000;
@@ -18,6 +19,7 @@ app.use(cors({
   origin: true // 172.20.10.13.3000 and all
 }));
 app.use('/api', router);
+app.use('/api/projects', projectRouter);
 app.use(errorMiddleware);
 
 const start = async () => {

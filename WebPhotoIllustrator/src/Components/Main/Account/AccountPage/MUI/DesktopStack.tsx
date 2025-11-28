@@ -14,10 +14,12 @@ import { Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import Avatar from '@mui/material/Avatar';
 import ButtonBase from '@mui/material/ButtonBase';
+import Divider from '@mui/material/Divider';
 
 import {Context} from "../../../../../index";
 import {IUser} from "../../../../../models/IUser";
 import UserService from "../../../../../Services/UserService";
+import AccountStats from "./AccountStats";
 
 function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
   const [avatar, setAvatar] = useState<string | undefined>(undefined);
@@ -106,41 +108,29 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
           <FormControl
             sx={{ display: { sm: "flex-column", md: "flex-row" }, gap: 2 }}
           >
-            <Input 
-                size="sm" 
-                placeholder="First name" 
-                value={firstName} 
-                onChange={(e) => setFirstName(e.target.value)}
-            />
-            <Input 
-                size="sm" 
-                placeholder="Last name" 
-                sx={{ flexGrow: 1 }} 
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-            />
+            <Typography 
+            > {store.user.firstName} { store.user.lastName}</Typography>
           </FormControl>
         </Stack>
         <Stack direction="row" spacing={2}>
           <FormControl sx={{ flexGrow: 1 }}>
             <FormLabel>Email: {store.isActivated ? "Почта активирована" : "Почта не активирована!"}</FormLabel>
-            <Input
-              size="sm"
-              type="email"
-              startDecorator={<EmailRoundedIcon />}
-              placeholder="email"
-              defaultValue={store.user.email}
-              value={store.user.email}
-              sx={{ flexGrow: 1 }}
-            />
+            <Typography 
+            > {store.user.email}</Typography>
           </FormControl>
 
         </Stack>
+        <Divider />
         <Stack direction="row" spacing={1}>
+          <Button onClick={() => store.logout()}>Редактировать</Button>
            <Button onClick={() => store.logout()}>Сменить пароль</Button>
           <Button onClick={() => store.logout()}>Выйти</Button>
         </Stack>
       </Stack>
+      <Divider />
+      <AccountStats StatName="Projects" StatValue={0} />
+      <AccountStats StatName="Favourite Projects" StatValue={0} />
+      <AccountStats StatName="Stars" StatValue={0} />
     </Stack>
   )
 }

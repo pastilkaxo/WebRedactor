@@ -41,11 +41,14 @@ class UserService {
     async login(email,password) {
         const user = await UserModel.findOne({email});
         if(!user) {
-            throw ApiError.BadRequest("Пользователь с таким email не найден!");
+            throw ApiError.BadRequest("Неверная почта или пароль!");
         }
         const isPassEquals = await bcrypt.compare(password, user.password);
         if(!isPassEquals) {
-            throw ApiError.BadRequest("Некорректный пароль");
+            throw ApiError.BadRequest("Неверная почта или пароль!");
+        }
+        if (user.isBlocked) {
+            throw ApiError.BlockedUser();
         }
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({...userDto});
@@ -68,6 +71,10 @@ class UserService {
            // throw ApiError.UnauthorizedError();
         }
         const user = await UserModel.findById(userData.id);
+
+        if (!user || user.isBlocked) {
+             throw ApiError.BlockedUser(); 
+        }
 
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({...userDto});

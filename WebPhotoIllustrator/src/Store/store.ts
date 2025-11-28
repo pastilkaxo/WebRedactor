@@ -100,6 +100,9 @@ export default  class Store {
             console.log(response);
             localStorage.setItem("token", response.data.accessToken);
             await this.checkAuth();
+            if (this.user.isBlocked) {
+                this.setError("Аккаунт заблокирован. Обратитесь к администратору.");
+            }
             if (this.user && !this.user.isActivated) {
                 await this.logout(); 
                  this.setError("Аккаунт не активирован. Проверьте вашу почту.");

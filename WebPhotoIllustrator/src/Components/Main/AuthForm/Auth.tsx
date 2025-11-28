@@ -45,8 +45,8 @@ function Auth(){
     
     if (validate()) {
       try {
+
         await store.login(email, password);
-        
         if (store.isAuth && store.user.isActivated) {
           navigator("/profile");
         }
