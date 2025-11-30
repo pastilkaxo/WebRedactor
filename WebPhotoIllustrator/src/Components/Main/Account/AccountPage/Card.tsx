@@ -20,6 +20,7 @@ import SettingsView from "./SettingsView";
 import {Context} from "../../../../index";
 import {IUser} from "../../../../models/IUser";
 import UserService from "../../../../Services/UserService";
+import FavView from "./FavView";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -62,22 +63,12 @@ function a11yProps(index: number) {
 
 function ProfileCard(){
   const {store} = useContext(Context);
-  const [users, setUsers] = useState<IUser[]>([]);
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  async function getUser(){
-    try{
-      const response = await UserService.fetchUsers();
-      setUsers(response.data);
-    }
-    catch(err:any){
-      console.log(err);
-    }
-  }
 
 
   return(
@@ -93,8 +84,9 @@ function ProfileCard(){
         >
           <Tab label="Профиль" {...a11yProps(0)} />
           <Tab label="Проекты" {...a11yProps(1)} />
-          <Tab label="Настройки" {...a11yProps(2)} />
-          {store.user.roles.includes("ADMIN") && <Tab label="Админ панель" {...a11yProps(3)} />}
+          <Tab label="Избранное" {...a11yProps(2)} />
+          <Tab label="Настройки" {...a11yProps(3)} />
+          {store.user.roles.includes("ADMIN") && <Tab label="Админ панель" {...a11yProps(4)} />}
         </Tabs>
       </AppBar>
       <Divider />
@@ -105,9 +97,12 @@ function ProfileCard(){
         <ProjectsView/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <SettingsView/>
+        <FavView/>
       </TabPanel>
       <TabPanel value={value} index={3}>
+        <SettingsView/>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
         {store.user.roles.includes("ADMIN") && <AdminView />}
       </TabPanel>
     </Card>

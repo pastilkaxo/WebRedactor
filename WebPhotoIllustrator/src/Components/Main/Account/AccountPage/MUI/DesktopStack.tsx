@@ -51,15 +51,7 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
 
 
 
-  async function getUser(){
-    try{
-      const response = await UserService.fetchUsers();
-      setUsers(response.data);
-    }
-    catch(err:any){
-      console.log(err);
-    }
-  }
+
   return(
     <Stack
       direction="row"
@@ -104,7 +96,7 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
       </Stack>
       <Stack spacing={2} sx={{ flexGrow: 1 }}>
         <Stack spacing={1}>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>Имя:</FormLabel>
           <FormControl
             sx={{ display: { sm: "flex-column", md: "flex-row" }, gap: 2 }}
           >
@@ -114,7 +106,7 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
         </Stack>
         <Stack direction="row" spacing={2}>
           <FormControl sx={{ flexGrow: 1 }}>
-            <FormLabel>Email: {store.isActivated ? "Почта активирована" : "Почта не активирована!"}</FormLabel>
+            <FormLabel>Почта: {store.isActivated ? "Активирована" : "Не активирована!"}</FormLabel>
             <Typography 
             > {store.user.email}</Typography>
           </FormControl>
@@ -122,15 +114,12 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
         </Stack>
         <Divider />
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => store.logout()}>Редактировать</Button>
-           <Button onClick={() => store.logout()}>Сменить пароль</Button>
-          <Button onClick={() => store.logout()}>Выйти</Button>
         </Stack>
       </Stack>
       <Divider />
-      <AccountStats StatName="Projects" StatValue={0} />
-      <AccountStats StatName="Favourite Projects" StatValue={0} />
-      <AccountStats StatName="Stars" StatValue={0} />
+      <AccountStats StatName="Projects" StatValue={store.user.projects.length || 0} />
+      <AccountStats StatName="Favourite Projects" StatValue={store.user.favorites.length || 0} />
+      <AccountStats StatName="Stars" StatValue={store.user.totalStars || 0} />
     </Stack>
   )
 }

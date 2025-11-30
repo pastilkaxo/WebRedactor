@@ -188,7 +188,6 @@ const AdminView: React.FC = () => {
                 Пользователи
             </Typography>
             
-{/* Ограничиваем высоту для компактности */}
             <Box sx={{ height: 500, width: "100%" }}>
                 <DataGrid
                     rows={users}

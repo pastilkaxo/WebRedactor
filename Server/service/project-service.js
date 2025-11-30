@@ -2,6 +2,7 @@ const ProjectModel = require("../models/project-model");
 const UserModel = require("../models/user-model");
 const ApiError = require("../Exceptions/api-error");
 const S3Service = require("../utils/s3.service");
+const CommentModel = require("../models/comment-model");
 
 class ProjectService {
 
@@ -85,10 +86,14 @@ class ProjectService {
     async rateProject(projectId, userId, stars) {
         const project = await ProjectModel.findById(projectId);
         if (!project) throw ApiError.BadRequest("Проект не найден");
-        project.stars += stars;
         if (project.owner.toString() === userId) {
             throw ApiError.BadRequest("Нельзя оценивать свои работы");
         }
+        if(project.ratedBy.includes(userId)) {
+            throw ApiError.BadRequest("Вы уже оценили этот проект");
+        }
+        project.stars += stars;
+        project.ratedBy.push(userId);
         await project.save();
         const owner = await UserModel.findById(project.owner);
         if (owner) {
@@ -97,8 +102,53 @@ class ProjectService {
         }
     }
 
+    async toggleFavorite(projectId, userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) throw ApiError.BadRequest("Пользователь не найден");
+        const index = user.favorites.indexOf(projectId);
+        if (index === -1) {
+            user.favorites.push(projectId);
+        } else {
+            user.favorites.splice(index, 1);
+        }
+        await user.save();
+        return user.favorites;
+    }
+    
+    async addComment(projectId, userId, text) {
+        const comment = await CommentModel.create({ text, author: userId, project: projectId });
+        const project = await ProjectModel.findById(projectId);
+        if (!project) throw ApiError.BadRequest("Проект не найден");
+        project.comments.push(comment._id);
+        await project.save();
+        return await comment.populate('author', 'email');
+    }
+
+    async deleteMyComment(commentId, userId) { 
+        const comment = await CommentModel.findById(commentId);
+        if (!comment) throw ApiError.BadRequest("Комментарий не найден");
+        if (comment.author.toString() !== userId) {
+            throw ApiError.Forbidden("Нет прав на удаление этого комментария");
+        }
+        await CommentModel.deleteOne({ _id: commentId });
+        await ProjectModel.updateOne({ _id: comment.project }, { $pull: { comments: commentId } });
+        return { message: "Комментарий удален" };
+    }
+    
+    async getProjectComments(projectId) { 
+        return await CommentModel.find({ project: projectId }).populate('author', 'email').sort({ createdAt: -1 });
+    }
+
 
     // admin functions
+
+    async deleteAnyComment(commentId) {
+        const comment = await CommentModel.findById(commentId);
+        if (!comment) throw ApiError.BadRequest("Комментарий не найден");
+        await CommentModel.deleteOne({ _id: commentId });
+        await ProjectModel.updateOne({ _id: comment.project }, { $pull: { comments: commentId } });
+        return { message: "Комментарий удален администратором" };
+    }
 
     async getAllProjects() {
         const projects = await ProjectModel.find().sort({ createdAt: -1 });

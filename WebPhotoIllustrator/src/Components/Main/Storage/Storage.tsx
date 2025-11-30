@@ -3,13 +3,22 @@ import {
     Box, Grid, Card, CardMedia, CardContent, Typography, CardActionArea,
     Dialog, DialogContent, CircularProgress, Alert, Rating, Stack
 } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import SendIcon from '@mui/icons-material/Send';
+import { IconButton, TextField, List, ListItem, ListItemText, Divider } from '@mui/material';
+
 import { Context } from '../../..';
 import ProjectService from '../../../Services/ProjectService';
 import { IProject } from '../../../models/IProject';
+import { IComment } from '../../../models/IComment';
+import { observer } from 'mobx-react-lite';
 
 const Storage: React.FC = () => {
     const { store } = useContext(Context);
     const [projects, setProjects] = useState<IProject[]>([]);
+    const [comments, setComments] = useState<IComment[]>([]);
+    const [newComment, setNewComment] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
@@ -24,8 +33,8 @@ const Storage: React.FC = () => {
         try {
             setLoading(true);
             const response = await ProjectService.getPublicProjects();
-            const publicProjects = response.data.filter(p => p.owner !== store.user.id);
-            setProjects(publicProjects);
+            //const publicProjects = response.data.filter(p => p.owner !== store.user.id);
+            setProjects(response.data);
         } catch (e: any) {
             setError(e.response?.data?.message || 'Ошибка при загрузке проектов');
         } finally {
@@ -33,9 +42,55 @@ const Storage: React.FC = () => {
         }
     };
 
-    const handleOpenPreview = (project: IProject) => {
+    const handleOpenPreview = async (project: IProject) => {
         setSelectedProject(project);
-        setOpenPreview(true);
+      setOpenPreview(true);
+      try {
+        const response = await ProjectService.getComments(project._id);
+        setComments(response.data);
+      } catch (e) {
+        alert('Не удалось загрузить комментарии');
+      }
+    };
+  
+  const handleToggleFavorite = async (e: React.MouseEvent, projectId: string) => {
+    e.stopPropagation();
+    try {
+      const response = await ProjectService.toggleFavorite(projectId);
+      store.user.favorites = response.data;
+      setProjects([...projects]);
+    } catch (e) {
+      alert('Не удалось обновить избранное');
+    }
+  }
+  
+  const handleSendComment = async () => {
+    if (!selectedProject || newComment.trim() === '') return;
+    try {
+      const response = await ProjectService.addComment(selectedProject._id, newComment);
+      setComments([response.data, ...comments]);
+      setNewComment('');
+    } catch (e) {
+      alert('Не удалось отправить комментарий');
+    }
+  }
+    
+    const handleDeleteMyComment = async (commentId: string) => {
+        try {
+            await ProjectService.deleteMyComment(commentId);
+            setComments(comments.filter(comment => comment._id !== commentId));
+        } catch (e) {
+            alert('Не удалось удалить комментарий');
+        }
+    };
+
+    const handleDeleteAnyComment = async (commentId: string) => {
+        try {
+            await ProjectService.deleteAnyComment(commentId);
+            setComments(comments.filter(comment => comment._id !== commentId));
+        } catch (e) {
+            alert('Не удалось удалить комментарий');
+        }
     };
 
     const handleClosePreview = () => {
@@ -49,8 +104,8 @@ const Storage: React.FC = () => {
             await ProjectService.rateProject(projectId, newValue);
           alert(`Вы поставили ${newValue} звезд!`);
           fetchPublicProjects();
-        } catch (e) {
-            alert('Не удалось оценить работу');
+        } catch (e: any ) {
+            alert(`${e.response?.data?.message || 'Не удалось поставить оценку'}`);
         }
     };
 
@@ -78,7 +133,14 @@ const Storage: React.FC = () => {
                                     height="200"
                                     image={project.previewImage}
                                     alt={project.name}
-                                />
+                        />
+                            <IconButton 
+                              onClick={(e) => handleToggleFavorite(e, project._id)}
+                              color="error"
+                              sx={{ position: 'absolute', top: 5, right: 5, zIndex: 10, bgcolor: 'rgba(255,255,255,0.7)' }}
+                          >
+                              {store.user.favorites.includes(project._id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                          </IconButton>
                             </CardActionArea>
                             <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography gutterBottom variant="h6" component="div" noWrap>
@@ -88,11 +150,15 @@ const Storage: React.FC = () => {
                                     <Typography variant="body2">Оцените работу:</Typography>
                                     <Rating
                                         name={`rating-${project._id}`}
-                                        defaultValue={0}
+                                         defaultValue={(project.stars || 0)} 
                                         onChange={(event, newValue) => {
                                             handleRateProject(project._id, newValue);
                                         }}
                                     />
+                                </Stack>
+                                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
+                                    <Typography variant="body2">Кол-во звёзд:</Typography>
+                                    <Typography variant="h6">{project.stars || 0}</Typography>
                                 </Stack>
                             </CardContent>
                         </Card>
@@ -103,16 +169,50 @@ const Storage: React.FC = () => {
             <Dialog open={openPreview} onClose={handleClosePreview} maxWidth="md" fullWidth>
                 <DialogContent sx={{ p: 0 }}>
                     {selectedProject && (
-                        <img 
+
+              <>
+                                        <img 
                             src={selectedProject.previewImage} 
                             alt={selectedProject.name}
                             style={{width: '100%', height: 'auto', display: 'block' }} 
-                        />
-                    )}
-                </DialogContent>
-            </Dialog>
+              />
+                  <Box sx={{ p: 2 }}>
+                <Typography variant="h6">Комментарии</Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                    <TextField 
+                        fullWidth size="small" 
+                        placeholder="Написать комментарий..." 
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                    />
+                    <IconButton onClick={handleSendComment} color="primary"><SendIcon /></IconButton>
+                </Box>
+                <List sx={{ maxHeight: 200, overflow: 'auto' }}>
+                    {comments.map((c) => (
+                        <ListItem key={c._id} alignItems="flex-start">
+                            <ListItemText 
+                                primary={c.author?.email + ` (${new Date(c.createdAt).toLocaleString()})`} 
+                                secondary={c.text} 
+                            />
+                            {(c.author?._id === store.user.id) ? (
+                                <IconButton edge="end" style={{fontSize:"15px"}} onClick={() => handleDeleteMyComment(c._id)} color="error">
+                                    Удалить
+                                </IconButton>
+                            ) : store.user.roles.includes('ADMIN') ? (
+                                <IconButton edge="end" style={{fontSize:"15px"}} onClick={() => handleDeleteAnyComment(c._id)} color="error">
+                                    Удалить (админ)
+                                </IconButton>
+                            ) : null}
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+                      </>
+                            )}
+            </DialogContent>
+          </Dialog>
         </Box>
     );
 };
 
-export default Storage;
+export default observer(Storage);

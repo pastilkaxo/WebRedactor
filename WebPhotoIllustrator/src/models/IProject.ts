@@ -1,3 +1,5 @@
+import { IComment } from "./IComment";
+
 export interface IProject {
     _id: string;
     name: string;
@@ -7,6 +9,8 @@ export interface IProject {
     visibility: 'PRIVATE' | 'PUBLIC';
     owner: string; 
     previewImage: string;
+    ratedBy: string[];
+    comments: IComment[]; 
     stars: number;
 }
     

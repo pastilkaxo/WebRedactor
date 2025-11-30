@@ -1,8 +1,21 @@
 import React from "react"
 
 function SettingsView() {
+  
+  const handleChangePassword = () => {
+  };
+
+  const handleChangeFirstName = () => {
+  };
+  
+  const handleChangeLastName = () => {
+  };
+
+
   return (
-    <div>SettingsView</div>
+    <div>
+      <h2>Настройки аккаунта</h2>
+    </div>
   )
 }
 

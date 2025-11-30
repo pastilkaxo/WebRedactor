@@ -16,6 +16,7 @@ export default  class Store {
     error = "";
     isEditing = false;
     wantToResetPassword = false;
+    totalStars = 0;
     isActivated = false;
     
     constructor() {
@@ -27,6 +28,10 @@ export default  class Store {
 
     setAuth(isAuth: boolean) {
         this.isAuth = isAuth;
+    }
+
+    setTotalStars(totalStars: number) {
+        this.totalStars = totalStars;
     }
 
     setUser(user: IUser) {
@@ -154,6 +159,7 @@ export default  class Store {
             if (this.isActivated) {
                 this.setAuth(true);
                 this.setUser(response.data.user);
+                this.setTotalStars(response.data.user.totalStars || 0);
             }
             else {
                 this.setAuth(false);

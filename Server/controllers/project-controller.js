@@ -71,7 +71,61 @@ class ProjectController {
         }
     }
 
+    async toggleFavorite(req, res, next) {
+        try {
+            const { projectId } = req.params;
+            const favorites = await projectService.toggleFavorite(projectId, req.user.id);
+            return res.json(favorites);
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    
+    async addComment(req, res, next) {
+        try {
+            const { projectId } = req.params;
+            const { text } = req.body;
+            const comment = await projectService.addComment(projectId, req.user.id, text);
+            return res.json(comment);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getComments(req, res, next) { 
+        try {
+            const { projectId } = req.params;
+            const comments = await projectService.getProjectComments(projectId);
+            return res.json(comments);
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteMyComment(req, res, next) { 
+        try {
+            const { commentId } = req.params;
+            const result = await projectService.deleteMyComment(commentId, req.user.id);
+            return res.json(result);
+        } catch (e) {
+            next(e);
+        }
+    }
+
     // admin only
+
+    async deleteAnyComment(req, res, next) {
+        try {
+            const { commentId } = req.params;
+            const result = await projectService.deleteAnyComment(commentId);
+            return res.json(result);
+        } catch (e) {
+            next(e);
+        }
+    }
+
     async getAllProjects(req, res, next) {
         try {
             const projects = await projectService.getAllProjects();

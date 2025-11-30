@@ -17,17 +17,7 @@ import UserService from "../../../../../Services/UserService";
 
 function MobileStack(){
   const {store} = useContext(Context);
-  const [users, setUsers] = useState<IUser[]>([]);
 
-  async function getUser(){
-    try{
-      const response = await UserService.fetchUsers();
-      setUsers(response.data);
-    }
-    catch(err:any){
-      console.log(err);
-    }
-  }
 
   return(
     <Stack

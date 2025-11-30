@@ -34,7 +34,28 @@ export default class ProjectService {
         return $api.delete(`/projects/${id}`);
     }
 
+    static async toggleFavorite(projectId: string): Promise<AxiosResponse<string[]>> {
+        return $api.post<string[]>(`/projects/${projectId}/favorite`);
+    }
+
+    static async addComment(projectId: string, text: string): Promise<AxiosResponse<any>> {
+        return $api.post(`/projects/${projectId}/comment`, { text });
+    }
+
+    static async getComments(projectId: string): Promise<AxiosResponse<any[]>> {
+        return $api.get<any[]>(`/projects/${projectId}/comments`);
+    }
+
+    static async deleteMyComment(commentId: string): Promise<any> {
+        return $api.delete(`/projects/comments/${commentId}`);
+    }
+
     // Admin functions
+
+    static async deleteAnyComment(commentId: string): Promise<any> {
+        return $api.delete(`/projects/comments/${commentId}/admin`);
+    }
+
     static async fetchAllProjects(): Promise<AxiosResponse<IProject[]>> {
         return $api.get<IProject[]>("/projects/admin/projects");
     }

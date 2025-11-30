@@ -11,9 +11,13 @@ router.get('/', authMiddleware, projectController.getAll);
 router.get('/:id', authMiddleware, projectController.getOne);
 router.put('/:id', authMiddleware, projectController.update);
 router.delete('/:id', authMiddleware, projectController.delete);
+router.post('/:projectId/favorite', authMiddleware, projectController.toggleFavorite);
+router.post('/:projectId/comment', authMiddleware, projectController.addComment);
+router.get('/:projectId/comments', authMiddleware, projectController.getComments);
 router.post('/:projectId/rate', authMiddleware, projectController.rateProject);
 router.delete('/admin/projects/:id', authMiddleware,roleMiddleware(["ADMIN"]), projectController.deleteAnyProject); 
-
+router.delete('/comments/:commentId/admin', authMiddleware,roleMiddleware(["ADMIN"]), projectController.deleteAnyComment);
+router.delete('/comments/:commentId', authMiddleware, projectController.deleteMyComment);
 
 
 module.exports = router;

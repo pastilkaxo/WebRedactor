@@ -14,6 +14,8 @@ const ProjectSchema = new Schema({
     updatedAt: { type: Date, default: Date.now },
     previewImage: { type: String, default: '' },
     stars: { type: Number, default: 0 }, 
+    ratedBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments:[{type: Schema.Types.ObjectId, ref: 'Comment'}],
 });
 
 module.exports = model('Project', ProjectSchema);

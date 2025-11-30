@@ -8,7 +8,7 @@ module.exports = class UserDto{
     roles;
     favorites;
     projects;
-    
+    totalStars;
 
     constructor(model){
         this.email = model.email;
@@ -20,5 +20,6 @@ module.exports = class UserDto{
         this.roles = model.roles;
         this.favorites = model.favorites;
         this.projects = model.projects;
+        this.totalStars = model.totalStars;
     }
 }
