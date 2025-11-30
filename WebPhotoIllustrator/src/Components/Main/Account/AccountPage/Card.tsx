@@ -1,25 +1,25 @@
 import {useContext, useState} from "react";
 
+import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
 import Divider from "@mui/joy/Divider";
+import AppBar from "@mui/material/AppBar";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import {observer} from  "mobx-react-lite";
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from "@mui/joy/Box";
 
+import AdminView from "./AdminView";
 import DesktopStack from "./MUI/DesktopStack";
 import MobileStack from "./MUI/MobileStack";
+import ProfileView from "./ProfileView";
+import ProjectsView from "./ProjectsView";
+import SettingsView from "./SettingsView";
 import {Context} from "../../../../index";
 import {IUser} from "../../../../models/IUser";
 import UserService from "../../../../Services/UserService";
-import ProfileView from "./ProfileView";
-import SettingsView from "./SettingsView";
-import ProjectsView from "./ProjectsView";
-import AdminView from "./AdminView";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -54,7 +54,7 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 

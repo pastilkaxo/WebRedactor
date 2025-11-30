@@ -1,12 +1,10 @@
-import React, { useState, useEffect,useContext } from 'react';
-import { IUser } from '../../../../models/IUser';
-import UserService from '../../../../Services/UserService';
-import { 
-    DataGrid, 
-    GridColDef, 
-    GridRenderCellParams, 
-    GridToolbar 
-} from '@mui/x-data-grid';
+import React, { useState, useEffect,useContext } from "react";
+
+
+import BlockIcon from "@mui/icons-material/Block";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { 
     Box, 
     Button, 
@@ -20,22 +18,27 @@ import {
     DialogActions,
     Stack,
     Tooltip
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import BlockIcon from '@mui/icons-material/Block';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Context } from '../../../..';
+} from "@mui/material";
+import { 
+    DataGrid, 
+    GridColDef, 
+    GridRenderCellParams, 
+    GridToolbar 
+} from "@mui/x-data-grid";
+
+import { Context } from "../../../..";
+import { IUser } from "../../../../models/IUser";
+import UserService from "../../../../Services/UserService";
 
 const AdminView: React.FC = () => {
     const [users, setUsers] = useState<IUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const {store} = useContext(Context);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [editingUser, setEditingUser] = useState<IUser | null>(null);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
 
     const fetchUsers = async () => {
         setIsLoading(true);
@@ -43,12 +46,12 @@ const AdminView: React.FC = () => {
             const response = await UserService.fetchUsers();
             const filteredUsers = response.data.filter((u: IUser) => {
                 const isMe = u._id === store.user._id;
-                const isAdmin = u.roles.includes('ADMIN');
+                const isAdmin = u.roles.includes("ADMIN");
                 return !isMe && !isAdmin;
             })
             setUsers(filteredUsers);
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Ошибка при загрузке пользователей');
+            setError(err.response?.data?.message || "Ошибка при загрузке пользователей");
         } finally {
             setIsLoading(false);
         }
@@ -68,17 +71,17 @@ const AdminView: React.FC = () => {
             }
             fetchUsers(); 
         } catch (err: any) {
-            alert(err.response?.data?.message || 'Произошла ошибка');
+            alert(err.response?.data?.message || "Произошла ошибка");
         }
     };
 
     const handleDeleteUser = async (userId: string) => {
-        if (window.confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+        if (window.confirm("Вы уверены, что хотите удалить этого пользователя?")) {
             try {
                 await UserService.deleteUser(userId);
                 fetchUsers();
             } catch (err: any) {
-                alert(err.response?.data?.message || 'Произошла ошибка');
+                alert(err.response?.data?.message || "Произошла ошибка");
             }
         }
     };
@@ -86,16 +89,16 @@ const AdminView: React.FC = () => {
 
     const handleOpenEdit = (user: IUser) => {
         setEditingUser(user);
-        setFirstName(user.firstName || '');
-        setLastName(user.lastName || '');
+        setFirstName(user.firstName || "");
+        setLastName(user.lastName || "");
         setOpenEditModal(true);
     };
 
     const handleCloseEdit = () => {
         setOpenEditModal(false);
         setEditingUser(null);
-        setFirstName('');
-        setLastName('');
+        setFirstName("");
+        setLastName("");
     };
 
     const handleSaveUser = async () => {
@@ -105,44 +108,44 @@ const AdminView: React.FC = () => {
             handleCloseEdit();
             fetchUsers();
         } catch (err: any) {
-            alert(err.response?.data?.message || 'Не удалось обновить пользователя');
+            alert(err.response?.data?.message || "Не удалось обновить пользователя");
         }
     };
 
 
     const columns: GridColDef[] = [
-        { field: '_id', headerName: 'ID', width: 220 },
-        { field: 'email', headerName: 'Email', width: 200, flex: 1 },
-        { field: 'firstName', headerName: 'Имя', width: 120 }, 
-        { field: 'lastName', headerName: 'Фамилия', width: 120 },
+        { field: "_id", headerName: "ID", width: 220 },
+        { field: "email", headerName: "Email", width: 200, flex: 1 },
+        { field: "firstName", headerName: "Имя", width: 120 }, 
+        { field: "lastName", headerName: "Фамилия", width: 120 },
         { 
-            field: 'isActivated', 
-            headerName: 'Активация', 
+            field: "isActivated", 
+            headerName: "Активация", 
             width: 140,
             renderCell: (params: GridRenderCellParams) => (
                 <Chip 
-                    label={params.value ? 'Активирован' : 'Нет'} 
-                    color={params.value ? 'success' : 'warning'} 
+                    label={params.value ? "Активирован" : "Нет"} 
+                    color={params.value ? "success" : "warning"} 
                     variant="outlined"
                     size="small"
                 />
             )
         },
         { 
-            field: 'isBlocked', 
-            headerName: 'Статус', 
+            field: "isBlocked", 
+            headerName: "Статус", 
             width: 110,
             renderCell: (params: GridRenderCellParams) => (
                 <Chip 
-                    label={params.value ? 'Заблокирован' : 'Активен'} 
-                    color={params.value ? 'error' : 'success'} 
+                    label={params.value ? "Заблокирован" : "Активен"} 
+                    color={params.value ? "error" : "success"} 
                     size="small"
                 />
             )
         },
         {
-            field: 'actions',
-            headerName: 'Действия',
+            field: "actions",
+            headerName: "Действия",
             width: 150,
             sortable: false,
             renderCell: (params: GridRenderCellParams) => {
@@ -176,17 +179,17 @@ const AdminView: React.FC = () => {
     ];
 
     if (error) {
-        return <div style={{ color: 'red', padding: 20 }}>{error}</div>;
+        return <div style={{ color: "red", padding: 20 }}>{error}</div>;
     }
 
     return (
-        <Box sx={{ height: 650, width: '100%', p: 2 }}>
-            <Typography  variant="h5" gutterBottom sx={{ fontSize: '1.2rem', fontWeight: 600 }}>
+        <Box sx={{ height: 650, width: "100%", p: 2 }}>
+            <Typography  variant="h5" gutterBottom sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
                 Пользователи
             </Typography>
             
 {/* Ограничиваем высоту для компактности */}
-            <Box sx={{ height: 500, width: '100%' }}>
+            <Box sx={{ height: 500, width: "100%" }}>
                 <DataGrid
                     rows={users}
                     columns={columns}
@@ -211,16 +214,16 @@ const AdminView: React.FC = () => {
                     }}
                     
                     sx={{
-                        border: 'none',
-                        '& .MuiDataGrid-cell': {
-                            fontSize: '0.85rem',
+                        border: "none",
+                        "& .MuiDataGrid-cell": {
+                            fontSize: "0.85rem",
                         },
-                        '& .MuiDataGrid-columnHeaders': {
-                            backgroundColor: '#f5f5f5',
-                            fontSize: '0.9rem',
-                            fontWeight: 'bold'
+                        "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: "#f5f5f5",
+                            fontSize: "0.9rem",
+                            fontWeight: "bold"
                         },
-                        '& .MuiDataGrid-toolbarContainer': {
+                        "& .MuiDataGrid-toolbarContainer": {
                             paddingBottom: 1,
                         }
                     }}
@@ -229,7 +232,7 @@ const AdminView: React.FC = () => {
     <Dialog open={openEditModal} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
                 <DialogTitle>Редактирование</DialogTitle>
                 <DialogContent>
-                    <Box component="form" sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box component="form" sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 2 }}>
                         <TextField
                             label="Имя (First Name)"
                             fullWidth

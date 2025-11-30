@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from "react"
+
 import { Input, IconButton, Flex, Separator } from "blocksin-system"
 import { 
     TextAlignLeftIcon, 
@@ -79,8 +80,8 @@ export default function Settings({ canvas }) {
       break;
     case "textbox":
         setColor(object.fill);
-        setIsBold(object.fontWeight === 'bold');
-        setIsItalic(object.fontStyle === 'italic');
+        setIsBold(object.fontWeight === "bold");
+        setIsItalic(object.fontStyle === "italic");
         setIsUnderline(!!object.underline);
         setIsLinethrough(!!object.linethrough);
         setTextAlign(object.textAlign);
@@ -194,7 +195,7 @@ export default function Settings({ canvas }) {
     selectedObject.set(prop, newValue);
     canvas.renderAll();
     if (stateSetter) stateSetter(prev => !prev);
-    if (prop === 'textAlign') setTextAlign(newValue);
+    if (prop === "textAlign") setTextAlign(newValue);
   }
 
 
@@ -221,19 +222,19 @@ export default function Settings({ canvas }) {
       {selectedObject && selectedObject.type === "textbox" && (
         <>
              <Flex gap={10} style={{marginBottom: 10, marginTop: 5,color:"white"}}>
-                <IconButton size="small" variant={isBold ? "primary" : "ghost"} onClick={() => toggleStyle('fontWeight', undefined, setIsBold)}><FontBoldIcon/></IconButton>
-                <IconButton size="small" variant={isItalic ? "primary" : "ghost"} onClick={() => toggleStyle('fontStyle', undefined, setIsItalic)}><FontItalicIcon/></IconButton>
-                <IconButton size="small" variant={isUnderline ? "primary" : "ghost"} onClick={() => toggleStyle('underline', undefined, setIsUnderline)}><UnderlineIcon/></IconButton>
-                <IconButton size="small" variant={isLineThrough ? "primary" : "ghost"} onClick={() => toggleStyle('linethrough', undefined, setIsLinethrough)}><StrikethroughIcon /></IconButton>
-                <IconButton size="small" variant={isOverline ? "primary" : "ghost"} onClick={() => toggleStyle('overline', undefined, setIsOverline)}><OverlineIcon/></IconButton>
+                <IconButton size="small" variant={isBold ? "primary" : "ghost"} onClick={() => toggleStyle("fontWeight", undefined, setIsBold)}><FontBoldIcon/></IconButton>
+                <IconButton size="small" variant={isItalic ? "primary" : "ghost"} onClick={() => toggleStyle("fontStyle", undefined, setIsItalic)}><FontItalicIcon/></IconButton>
+                <IconButton size="small" variant={isUnderline ? "primary" : "ghost"} onClick={() => toggleStyle("underline", undefined, setIsUnderline)}><UnderlineIcon/></IconButton>
+                <IconButton size="small" variant={isLineThrough ? "primary" : "ghost"} onClick={() => toggleStyle("linethrough", undefined, setIsLinethrough)}><StrikethroughIcon /></IconButton>
+                <IconButton size="small" variant={isOverline ? "primary" : "ghost"} onClick={() => toggleStyle("overline", undefined, setIsOverline)}><OverlineIcon/></IconButton>
             </Flex>
             
-            <label style={{color:'white', fontSize:12}}>Alignment</label>
+            <label style={{color:"white", fontSize:12}}>Alignment</label>
             <Flex gap={10} style={{marginBottom: 10, marginTop: 5,color:"white"}}>
-                <IconButton size="small" variant={textAlign === 'left' ? "primary" : "ghost"} onClick={() => toggleStyle('textAlign', 'left',setTextAlign)}><TextAlignLeftIcon/></IconButton>
-                <IconButton size="small" variant={textAlign === 'center' ? "primary" : "ghost"} onClick={() => toggleStyle('textAlign', 'center',setTextAlign)}><TextAlignCenterIcon/></IconButton>
-                <IconButton size="small" variant={textAlign === 'right' ? "primary" : "ghost"} onClick={() => toggleStyle('textAlign', 'right', setTextAlign)}><TextAlignRightIcon /></IconButton>
-                <IconButton size="small" variant={textAlign === 'justify' ? "primary" : "ghost"} onClick={() => toggleStyle('textAlign', 'justify',setTextAlign)}><TextAlignJustifyIcon/></IconButton>
+                <IconButton size="small" variant={textAlign === "left" ? "primary" : "ghost"} onClick={() => toggleStyle("textAlign", "left",setTextAlign)}><TextAlignLeftIcon/></IconButton>
+                <IconButton size="small" variant={textAlign === "center" ? "primary" : "ghost"} onClick={() => toggleStyle("textAlign", "center",setTextAlign)}><TextAlignCenterIcon/></IconButton>
+                <IconButton size="small" variant={textAlign === "right" ? "primary" : "ghost"} onClick={() => toggleStyle("textAlign", "right", setTextAlign)}><TextAlignRightIcon /></IconButton>
+                <IconButton size="small" variant={textAlign === "justify" ? "primary" : "ghost"} onClick={() => toggleStyle("textAlign", "justify",setTextAlign)}><TextAlignJustifyIcon/></IconButton>
             </Flex>
 
             <Input fluid label="Font Size" type="number" value={fontSize} onChange={handleFontSizeChange} />

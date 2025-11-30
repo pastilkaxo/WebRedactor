@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+
 import { Button, Flex, Input, Separator } from "blocksin-system";
-import { PencilBrush } from 'fabric';
+import { PencilBrush } from "fabric";
 import { Pencil1Icon } from "sebikostudio-icons"; // Предполагаемая иконка
 
 function PencilTool({ canvas,isDrawing }) {
@@ -38,16 +39,16 @@ function PencilTool({ canvas,isDrawing }) {
     }, [color, width, canvas, isDrawing]);
 
     return (
-        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: '10px',color:"white",display:isDrawing ?"flex":"none" }}>
+        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: "10px",color:"white",display:isDrawing ?"flex":"none" }}>
                 <div style={{ marginTop: 10 }}>
-                     <label style={{ color: 'white', fontSize: 12 }}>Brush Color</label>
+                     <label style={{ color: "white", fontSize: 12 }}>Brush Color</label>
                     <Flex gap={50} align="center" style={{ marginBottom: 10 }}>
                        
                         <input 
                             type="color" 
                             value={color} 
                             onChange={(e) => setColor(e.target.value)} 
-                            style={{ width: '100%', height: 30, cursor: 'pointer' }}
+                            style={{ width: "100%", height: 30, cursor: "pointer" }}
                         />
                     </Flex>
 

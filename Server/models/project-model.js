@@ -11,7 +11,9 @@ const ProjectSchema = new Schema({
         default: 'PRIVATE' 
     },
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    previewImage: { type: String, default: '' },
+    stars: { type: Number, default: 0 }, 
 });
 
 module.exports = model('Project', ProjectSchema);

@@ -12,6 +12,8 @@ const UserSchema = new Schema({
     isBlocked: { type: Boolean, default: false },
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
     projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+    totalStars: { type: Number, default: 0 },
+
 })
 
 module.exports = model('User', UserSchema);

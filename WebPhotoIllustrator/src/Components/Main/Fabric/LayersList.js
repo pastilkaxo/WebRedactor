@@ -1,6 +1,7 @@
-import React,{useEffect,useState} from 'react'
-import { Canvas } from 'fabric';
-import { IconButton,Flex } from 'blocksin-system';
+import React,{useEffect,useState} from "react"
+
+import { IconButton,Flex } from "blocksin-system";
+import { Canvas } from "fabric";
 import { ArrowUpIcon, ArrowDownIcon,EyeClosedIcon,EyeOpenIcon,    LockClosedIcon, 
     LockOpen2Icon } from "sebikostudio-icons"
 
@@ -119,7 +120,7 @@ function LayersList({canvas,showLayers}) {
                     opacity: obj.opacity,
                     locked: !obj.selectable
                 }));
-            console.log('Filtered layers:', objects);
+            console.log("Filtered layers:", objects);
             setLayers([...objects].reverse());
         }
     }

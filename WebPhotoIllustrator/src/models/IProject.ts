@@ -6,4 +6,7 @@ export interface IProject {
     updatedAt: string;
     visibility: 'PRIVATE' | 'PUBLIC';
     owner: string; 
+    previewImage: string;
+    stars: number;
 }
+    

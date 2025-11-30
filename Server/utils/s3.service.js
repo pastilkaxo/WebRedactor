@@ -1,20 +1,17 @@
 const { minioClient, bucket } = require("./s3-client");
 
 class S3Service {
-    // Генерируем уникальный путь: userId/projects/name_timestamp.json
+    //  userId/projects/name_timestamp.json
     makeKey(userId, fileName) {
         const cleanName = fileName.replace(/\s+/g, '_');
         return `${userId}/projects/${cleanName}`;
     }
 
     async uploadJson(userId, json, fileName) {
-        // Если fileName уже содержит путь (например, при обновлении), используем его
-        // Иначе генерируем новый ключ
         const key = fileName.includes('/') ? fileName : this.makeKey(userId, fileName);
         
         const buffer = Buffer.from(JSON.stringify(json));
         
-        // Метаданные полезны для браузеров и S3
         const metaData = {
             'Content-Type': 'application/json',
             'X-Amz-Meta-App': 'CanvasApp'
@@ -42,7 +39,7 @@ class S3Service {
             });
         } catch (error) {
             console.error(`S3 getObject error for key ${key}:`, error);
-            throw error; // Пробрасываем ошибку выше
+            throw error; 
         }
     }
 
@@ -51,7 +48,6 @@ class S3Service {
             await minioClient.removeObject(bucket, key);
         } catch (error) {
             console.error(`Error deleting file ${key} from S3:`, error);
-            // Не выбрасываем ошибку критично, чтобы не ломать удаление из БД
         }
     }
 }

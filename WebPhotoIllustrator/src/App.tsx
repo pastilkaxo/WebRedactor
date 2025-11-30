@@ -18,6 +18,9 @@ import Storage from "./Components/Main/Storage/Storage";
 import {Context} from "./index"
 import "./Styles/App.css"
 
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
+import ProjectsView from "./Components/Main/Account/AccountPage/ProjectsView";
 
 
 // import '@fontsource/inter';
@@ -32,6 +35,11 @@ function App() {
     }
   }, []);
 
+  // if (store.isLoading) {
+  //     return    <CircularProgress   size="2rem" />
+  // }
+
+
   return (
     <Router>
       <div className="wrapper d-flex min-vh-100">
@@ -40,8 +48,10 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Main  />} />
-              <Route path="/storage" element={store.isAuth ?<Storage/> : <Main/>} />
-              <Route path="/editor" element={store.isAuth ?<CanvasApp/> : <Main/>} />
+              <Route path="/storage" element={store.isAuth ? <Storage /> : <Main />} />
+              <Route path="/projects" element={store.isAuth ? <ProjectsView /> : <Main />} />
+              <Route path="/editor" element={store.isAuth ? <CanvasApp /> : <Main />} />
+              <Route path="/editor/:id" element={store.isAuth ? <CanvasApp/> : <Main/>} />
               <Route path="/profile" element={store.isAuth ? <Profile /> : <Main />} />
               <Route path="/password/reset" element={store.wantToResetPassword && !store.isAuth ? <ResetForm /> : <NotFound />} />
               <Route path='*' element={ <NotFound/> } />

@@ -1,13 +1,16 @@
-import React,{useState,useContext} from 'react'
-import {Textbox} from "fabric"
-import {Context} from "../../../index";
+import React,{useState,useContext} from "react"
+
 import { Input, Flex, Button } from "blocksin-system";
+import {Textbox} from "fabric"
 import {SparklesIcon} from "sebikostudio-icons"
+
+import {Context} from "../../../index";
 
 function FabricAssist({ canvas }) {
     const [inputText, setInputText] = useState("");
     const { store } = useContext(Context);
-    const handleGenerage = async () => {
+    const handleGenerage = async (e) => {
+        e.preventDefault();
         setInputText("");
         if (!inputText) {
             console.log("inputText is null"); // error alert need!

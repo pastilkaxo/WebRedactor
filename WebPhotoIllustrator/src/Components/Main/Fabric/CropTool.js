@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
+import { colors } from "@mui/material";
 import { Button, Flex } from "blocksin-system";
-import { Rect } from 'fabric';
+import { Rect } from "fabric";
 import { CropIcon, CheckIcon, Cross1Icon } from "sebikostudio-icons";
-import { colors } from '@mui/material';
 
 function CropTool({ canvas,showCropTool, cropRect,setCropRect,setShowCropTool }) {
 
@@ -45,7 +46,7 @@ function CropTool({ canvas,showCropTool, cropRect,setCropRect,setShowCropTool })
     };
 
     return (
-        <Flex className="Settings darkmode" direction="column" gap={100} style={{ padding: '10px',display:showCropTool?"flex":"none" }}>
+        <Flex className="Settings darkmode" direction="column" gap={100} style={{ padding: "10px",display:showCropTool?"flex":"none" }}>
                 <Flex gap={50} style={{ marginTop: 10,color:"white",display:showCropTool?"flex":"none" }}>
                     <Button onClick={applyCrop} variant="primary" size="small" fullWidth>
                         <CheckIcon /> Apply

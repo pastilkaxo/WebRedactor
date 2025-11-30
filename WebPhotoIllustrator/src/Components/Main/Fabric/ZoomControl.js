@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+
 import { Flex, Button, Input } from "blocksin-system";
 import { PlusIcon, MinusIcon,MagnifyingGlassIcon,ZoomInIcon,ZoomOutIcon } from "sebikostudio-icons";
 
@@ -25,7 +26,7 @@ function ZoomControl({ canvas, zoom, setZoom }) {
 
 
   return (
-   <Flex gap={50} align="center" className="ZoomControl darkmode" style={{ padding: '0 10px' }}>
+   <Flex gap={50} align="center" className="ZoomControl darkmode" style={{ padding: "0 10px" }}>
             <Button size="small" variant="ghost" onClick={() => handleZoom(-10)}>
                 <ZoomOutIcon />
             </Button>
@@ -33,7 +34,7 @@ function ZoomControl({ canvas, zoom, setZoom }) {
                 label="Zoom"
                 value={`${Math.round(zoom)}%`} 
                 onChange={handleInput} 
-                style={{ width: '60px', textAlign: 'center' }} 
+                style={{ width: "60px", textAlign: "center" }} 
             />
             <Button size="small" variant="ghost" onClick={() => handleZoom(10)}>
                 <ZoomInIcon />

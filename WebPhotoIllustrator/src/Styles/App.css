@@ -493,10 +493,6 @@ body {
   font-size: 14px;
 }
 
-.AI {
-  z-index: 100001;
-}
-
 .TopNavBar {
   z-index: 10001;
   position: fixed;

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"
 
-import localforage from "localforage";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import AspectRatio from "@mui/joy/AspectRatio";
@@ -11,15 +10,16 @@ import IconButton from "@mui/joy/IconButton";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import { Typography } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import ButtonBase from "@mui/material/ButtonBase";
+import Divider from "@mui/material/Divider";
+import localforage from "localforage";
 import { observer } from "mobx-react-lite";
-import Avatar from '@mui/material/Avatar';
-import ButtonBase from '@mui/material/ButtonBase';
-import Divider from '@mui/material/Divider';
 
+import AccountStats from "./AccountStats";
 import {Context} from "../../../../../index";
 import {IUser} from "../../../../../models/IUser";
 import UserService from "../../../../../Services/UserService";
-import AccountStats from "./AccountStats";
 
 function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
   const [avatar, setAvatar] = useState<string | undefined>(undefined);
@@ -73,10 +73,10 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
             tabIndex={-1} 
             aria-label="Avatar image"
             sx={{
-              borderRadius: '40px',
-              '&:has(:focus-visible)': {
-                outline: '2px solid',
-                outlineOffset: '2px',
+              borderRadius: "40px",
+              "&:has(:focus-visible)": {
+                outline: "2px solid",
+                outlineOffset: "2px",
               },
       }}
     >
@@ -89,14 +89,14 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
         accept="image/*"
         style={{
           border: 0,
-          clip: 'rect(0 0 0 0)',
-          height: '1px',
-          margin: '-1px',
-          overflow: 'hidden',
+          clip: "rect(0 0 0 0)",
+          height: "1px",
+          margin: "-1px",
+          overflow: "hidden",
           padding: 0,
-          position: 'absolute',
-          whiteSpace: 'nowrap',
-          width: '1px',
+          position: "absolute",
+          whiteSpace: "nowrap",
+          width: "1px",
         }}
         onChange={handleChangeAvatar}
       />

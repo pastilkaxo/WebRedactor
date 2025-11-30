@@ -1,4 +1,5 @@
-import React,{useState,useRef, useEffect} from 'react'
+import React,{useState,useRef, useEffect} from "react"
+
 import { Button, Flex, Paragraph, Heading, Separator } from "blocksin-system";
  
 
@@ -96,7 +97,7 @@ function StyleEditor({ canvas }) {
                     </Flex>
                 <Separator />
                 <Heading level={4} weight="bold">Edit Styles</Heading>
-                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <div style={{ maxHeight: "300px", overflowY: "auto" }}>
                     <Flex direction="column" gap={100} className="ColorList">
                         {colors.map(({ id, color }) => (
                             <Flex key={id} align="center">

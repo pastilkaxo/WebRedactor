@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom"
+import { ImageIcon } from "sebikostudio-icons";
 
 import NavBar from "./NavBar"
 import { Context } from "../..";
@@ -9,9 +10,7 @@ import { Context } from "../..";
 
 function Header() {
   const location = useLocation();
-  const isEditorPage = location.pathname === "/editor";
-  const { store } = useContext(Context);
-  
+  const isEditorPage = location.pathname.startsWith("/editor");
 
   if (isEditorPage) {
     return null;
@@ -25,6 +24,9 @@ function Header() {
         </Link>
         <Link className="nav-link aLink aLink-mobile" to="/storage">
           <img className='homeIcon' src='/Images/catalog.png' alt='Catalog' />
+        </Link>
+        <Link className="nav-link aLink aLink-mobile" to="/projects">
+          <img className='homeIcon' src='/Images/HomePage/myworks.png' alt='Catalog' />
         </Link>
         <Link className="nav-link aLink aLink-mobile" to="/editor">
           <img className='homeIcon' src='/Images/edit.png' alt='Create' />

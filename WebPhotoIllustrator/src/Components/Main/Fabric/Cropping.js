@@ -1,6 +1,7 @@
-import React from 'react'
-import { Rect } from "fabric"
+import React from "react"
+
 import { IconButton } from "blocksin-system"
+import { Rect } from "fabric"
 import { FrameIcon } from "sebikostudio-icons"
 
 
@@ -47,7 +48,7 @@ function Cropping({canvas,onFrameUpdated}) {
             canvas.renderAll();
         })
 
-        if (onFrameUpdated && typeof onFrameUpdated === 'function') {
+        if (onFrameUpdated && typeof onFrameUpdated === "function") {
             onFrameUpdated();
         }
     }

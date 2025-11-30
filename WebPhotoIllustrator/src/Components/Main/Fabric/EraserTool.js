@@ -1,6 +1,7 @@
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, use } from "react";
+
 import { Button, Flex, Input, Separator } from "blocksin-system";
-import { EraserBrush } from 'fabric'; // Импорт кисти ластика из Fabric v6
+import { EraserBrush } from "fabric"; // Импорт кисти ластика из Fabric v6
 import { EraserIcon } from "sebikostudio-icons"; 
 
 function EraserTool({ canvas, isErasing  }) {
@@ -16,7 +17,7 @@ function EraserTool({ canvas, isErasing  }) {
     }, [isErasing, canvas]);
     
     useEffect(() => { 
-        if (canvas && isErasing && canvas.freeDrawingBrush && canvas.freeDrawingBrush.type === 'EraserBrush') { 
+        if (canvas && isErasing && canvas.freeDrawingBrush && canvas.freeDrawingBrush.type === "EraserBrush") { 
             canvas.freeDrawingBrush.width = parseInt(width, 10) || 1;   
         }
 
@@ -25,9 +26,9 @@ function EraserTool({ canvas, isErasing  }) {
 
 
   return (
-        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: '10px', color: "white", display: isErasing ? "flex" : "none" }}>
+        <Flex className='Settings darkmode' direction="column" gap={100} style={{ padding: "10px", color: "white", display: isErasing ? "flex" : "none" }}>
             <div style={{ marginTop: 10 }}>
-                <label style={{ color: 'white', fontSize: 12 }}>Eraser Size</label>
+                <label style={{ color: "white", fontSize: 12 }}>Eraser Size</label>
                 <Input
                     type="number"
                     min="1"

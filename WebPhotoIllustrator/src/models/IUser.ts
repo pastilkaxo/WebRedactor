@@ -8,4 +8,5 @@ export interface IUser {
     projects: string[];
     favorites: string[];
     id: string;
+    totalStars: number;
 }

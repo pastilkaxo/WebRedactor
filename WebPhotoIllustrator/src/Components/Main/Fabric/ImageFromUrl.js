@@ -1,12 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
+
 import { Button, Input, Flex, Separator } from "blocksin-system";
-import { FabricImage } from 'fabric';
+import { FabricImage } from "fabric";
 
 function ImageTool({ canvas, showImageMenu }) { 
-    const [imageUrl, setImageUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState("");
     const [loading, setLoading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState(""); 
     const fileInputRef = useRef(null);
+
+
 
     const addImageToCanvas = (img) => {
         if (!canvas) return;
@@ -44,11 +47,11 @@ function ImageTool({ canvas, showImageMenu }) {
         setUploadMessage("Downloading...");
         
         const currentUrl = imageUrl;
-        setImageUrl(''); 
+        setImageUrl(""); 
 
         try {
             const img = await FabricImage.fromURL(currentUrl, {
-                crossOrigin: 'anonymous'
+                crossOrigin: "anonymous"
             });
             
             addImageToCanvas(img);
@@ -68,28 +71,32 @@ function ImageTool({ canvas, showImageMenu }) {
 
         const file = event.target.files[0];
         if (file && file.type.startsWith("image/")) {
-            const url = URL.createObjectURL(file);
-            
-            setLoading(true);
-            setUploadMessage("Loading from file...");
+            const reader = new FileReader();
 
-            try {
-                const img = await FabricImage.fromURL(url);
-                addImageToCanvas(img);
-                
-                // Очистка
-                URL.revokeObjectURL(url);
-                event.target.value = null;
-            } catch (error) {
-                console.error("Failed to load local file:", error);
-                setUploadMessage("Load failed!");
-                setLoading(false);
-            }
+            reader.onload = async (f) => {
+                const data = f.target.result;
+                setLoading(true);
+                setUploadMessage("Loading from file...");
+
+                try {
+                    const img = await FabricImage.fromURL(data);
+                    img.set({ src: data });
+                    addImageToCanvas(img);
+                    event.target.value = null;
+                }
+                catch (error) {
+                    console.error("Failed to load local file:", error);
+                    setUploadMessage("Load failed!");
+                    setLoading(false);
+                }
+            };
+
+            reader.readAsDataURL(file);
         }
     }
 
     return (
-        <Flex className='ImageTool CanvasSettings darkmode' gap={100} style={{ color:"white",padding: '10px', flexDirection: 'column', display: showImageMenu ? 'flex' : 'none' }}>
+        <Flex className='ImageTool CanvasSettings darkmode' gap={100} style={{ color:"white",padding: "10px", flexDirection: "column", display: showImageMenu ? "flex" : "none" }}>
             <input
                 ref={fileInputRef}
                 type="file"
@@ -123,11 +130,11 @@ function ImageTool({ canvas, showImageMenu }) {
                 variant="primary"
                 fullWidth
             >
-                {loading ? 'Adding...' : 'Add from URL'}
+                {loading ? "Adding..." : "Add from URL"}
             </Button>
             
             {uploadMessage && (
-                <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>
+                <div style={{ marginTop: 10, fontSize: 12, color: "#aaa" }}>
                     {uploadMessage}
                 </div>
             )}
