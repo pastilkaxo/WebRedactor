@@ -9,6 +9,16 @@ export default class UserService {
         return $api.get<IUser[]>('/admin/users');
     }
 
+    static async updateMySelf(userId: string, data: { firstName: string, lastName: string }): Promise<AxiosResponse<IUser>> {
+        return $api.put<IUser>('/update-myself', { 
+            id: userId,
+            updates: {
+                firstName: data.firstName,
+                lastName: data.lastName
+            }
+        });
+    }
+
     static async requestReset(email: string): Promise<AxiosResponse<IPassResponse>> {
         return $api.post('/password/forgot', { email });
     }

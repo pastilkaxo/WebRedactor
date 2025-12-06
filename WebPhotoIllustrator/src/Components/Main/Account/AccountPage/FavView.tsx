@@ -1,26 +1,27 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from "react";
+
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import SendIcon from "@mui/icons-material/Send";
 import {
     Box, Grid, Card, CardMedia, CardContent, Typography, CardActionArea,
     Dialog, DialogContent, CircularProgress, Alert, Rating, Stack,
     IconButton, TextField, List, ListItem, ListItemText
-} from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import SendIcon from '@mui/icons-material/Send';
-import { observer } from 'mobx-react-lite';
+} from "@mui/material";
+import { observer } from "mobx-react-lite";
 
-import { Context } from '../../../..';
-import ProjectService from '../../../../Services/ProjectService';
-import { IProject } from '../../../../models/IProject';
-import { IComment } from '../../../../models/IComment';
+import { Context } from "../../../..";
+import { IComment } from "../../../../models/IComment";
+import { IProject } from "../../../../models/IProject";
+import ProjectService from "../../../../Services/ProjectService";
 
 const FavView: React.FC = () => {
     const { store } = useContext(Context);
     const [projects, setProjects] = useState<IProject[]>([]);
     const [comments, setComments] = useState<IComment[]>([]);
-    const [newComment, setNewComment] = useState<string>('');
+    const [newComment, setNewComment] = useState<string>("");
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     
     const [openPreview, setOpenPreview] = useState(false);
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
@@ -36,7 +37,7 @@ const FavView: React.FC = () => {
             const favProjects = response.data.filter(p => store.user.favorites.includes(p._id));
             setProjects(favProjects);
         } catch (e: any) {
-            setError(e.response?.data?.message || 'Ошибка при загрузке избранного');
+            setError(e.response?.data?.message || "Ошибка при загрузке избранного");
         } finally {
             setLoading(false);
         }
@@ -49,7 +50,7 @@ const FavView: React.FC = () => {
             const response = await ProjectService.getComments(project._id);
             setComments(response.data);
         } catch (e) {
-            alert('Не удалось загрузить комментарии');
+            alert("Не удалось загрузить комментарии");
         }
     };
   
@@ -60,18 +61,18 @@ const FavView: React.FC = () => {
             store.user.favorites = response.data;
             setProjects(projects.filter(p => p._id !== projectId));
         } catch (e) {
-            alert('Не удалось обновить избранное');
+            alert("Не удалось обновить избранное");
         }
     }
   
     const handleSendComment = async () => {
-        if (!selectedProject || newComment.trim() === '') return;
+        if (!selectedProject || newComment.trim() === "") return;
         try {
             const response = await ProjectService.addComment(selectedProject._id, newComment);
             setComments([response.data, ...comments]);
-            setNewComment('');
+            setNewComment("");
         } catch (e) {
-            alert('Не удалось отправить комментарий');
+            alert("Не удалось отправить комментарий");
         }
     }
     
@@ -80,7 +81,7 @@ const FavView: React.FC = () => {
             await ProjectService.deleteMyComment(commentId);
             setComments(comments.filter(comment => comment._id !== commentId));
         } catch (e) {
-            alert('Не удалось удалить комментарий');
+            alert("Не удалось удалить комментарий");
         }
     };
 
@@ -89,7 +90,7 @@ const FavView: React.FC = () => {
             await ProjectService.deleteAnyComment(commentId);
             setComments(comments.filter(comment => comment._id !== commentId));
         } catch (e) {
-            alert('Не удалось удалить комментарий');
+            alert("Не удалось удалить комментарий");
         }
     };
 
@@ -104,7 +105,7 @@ const FavView: React.FC = () => {
             await ProjectService.rateProject(projectId, newValue);
             alert(`Вы поставили ${newValue} звезд!`);
         } catch (e: any) {
-            alert(`${e.response?.data?.message || 'Не удалось поставить оценку'}`);
+            alert(`${e.response?.data?.message || "Не удалось поставить оценку"}`);
         }
     };
 
@@ -117,8 +118,15 @@ const FavView: React.FC = () => {
     }
 
     return (
-        <Box sx={{ flexGrow: 1, p: 3 }}>
-            <Typography variant="h4" gutterBottom component="div" sx={{ mb: 3 }}>
+    <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Box sx={{ 
+            flexGrow: 1, 
+            p: 3, 
+            backgroundColor: "rgba(0, 0, 0, 0.34)",
+            borderRadius: 2, 
+            boxShadow: 3
+        }}>
+            <Typography variant="h4" gutterBottom component="div" sx={{ mb: 3, fontWeight:"bold",color:"white",textAlign:"center" }}>
                 Избранные проекты
             </Typography>
 
@@ -130,26 +138,26 @@ const FavView: React.FC = () => {
                 <Grid container spacing={3}>
                     {projects.map((project) => (
                         <Grid key={project._id}>
-                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                                 <CardActionArea onClick={() => handleOpenPreview(project)}>
                                     <CardMedia
                                         component="img"
                                         height="200"
-                                        image={project.previewImage || 'https://via.placeholder.com/300x200?text=No+Preview'}
+                                        image={project.previewImage || "https://via.placeholder.com/300x200?text=No+Preview"}
                                         alt={project.name}
-                                        sx={{ objectFit: 'cover' }}
+                                        sx={{ objectFit: "cover" }}
                                     />
                                     <IconButton 
                                         onClick={(e) => handleToggleFavorite(e, project._id)}
                                         color="error"
-                                        sx={{ position: 'absolute', top: 5, right: 5, zIndex: 10, bgcolor: 'rgba(255,255,255,0.7)' }}
+                                        sx={{ position: "absolute", top: 5, right: 5, zIndex: 10, bgcolor: "rgba(255,255,255,0.7)" }}
                                     >
                                         <FavoriteIcon /> 
                                     </IconButton>
                                 </CardActionArea>
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography gutterBottom variant="h6" component="div" noWrap>
-                                        {project.name || 'Без названия'}
+                                        {project.name || "Без названия"}
                                     </Typography>
                                     <Stack spacing={1}>
                                         <Typography variant="body2">Оцените работу:</Typography>
@@ -160,6 +168,7 @@ const FavView: React.FC = () => {
                                                 handleRateProject(project._id, newValue);
                                             }}
                                         />
+                                        <Typography variant="body2">Средняя оценка:{project.stars / project.ratedBy.length || 0}</Typography>
                                     </Stack>
                                 </CardContent>
                             </Card>
@@ -173,13 +182,13 @@ const FavView: React.FC = () => {
                     {selectedProject && (
                         <>
                             <img 
-                                src={selectedProject.previewImage || 'https://via.placeholder.com/800x600?text=No+Preview'} 
+                                src={selectedProject.previewImage || "https://via.placeholder.com/800x600?text=No+Preview"} 
                                 alt={selectedProject.name}
-                                style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '70vh', objectFit: 'contain', backgroundColor: '#000' }} 
+                                style={{ width: "100%", height: "auto", display: "block", maxHeight: "70vh", objectFit: "contain", backgroundColor: "#000" }} 
                             />
                             <Box sx={{ p: 2 }}>
                                 <Typography variant="h6">Комментарии</Typography>
-                                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                                <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
                                     <TextField 
                                         fullWidth size="small" 
                                         placeholder="Написать комментарий..." 
@@ -188,18 +197,18 @@ const FavView: React.FC = () => {
                                     />
                                     <IconButton onClick={handleSendComment} color="primary"><SendIcon /></IconButton>
                                 </Box>
-                                <List sx={{ maxHeight: 200, overflow: 'auto' }}>
+                                <List sx={{ maxHeight: 200, overflow: "auto" }}>
                                     {comments.map((c) => (
                                         <ListItem key={c._id} alignItems="flex-start">
                                             <ListItemText 
-                                                primary={`${c.author?.email || 'Пользователь'} (${new Date(c.createdAt).toLocaleString()})`} 
+                                                primary={`${c.author?.email || "Пользователь"} (${new Date(c.createdAt).toLocaleString()})`} 
                                                 secondary={c.text} 
                                             />
                                             {(c.author?._id === store.user.id) ? (
                                                 <IconButton edge="end" style={{fontSize:"15px"}} onClick={() => handleDeleteMyComment(c._id)} color="error">
                                                     Удалить
                                                 </IconButton>
-                                            ) : store.user.roles.includes('ADMIN') ? (
+                                            ) : store.user.roles.includes("ADMIN") ? (
                                                 <IconButton edge="end" style={{fontSize:"15px"}} onClick={() => handleDeleteAnyComment(c._id)} color="error">
                                                     Удалить (админ)
                                                 </IconButton>
@@ -212,6 +221,7 @@ const FavView: React.FC = () => {
                 )}
             </DialogContent>
         </Dialog>
+        </Box>    
     </Box>
     );
 };

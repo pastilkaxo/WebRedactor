@@ -47,6 +47,8 @@ class ProjectService {
 
     async deleteProject(projectId, userId) {
         const project = await ProjectModel.findById(projectId);
+        const user = await UserModel.findById(userId);
+        if (!user) throw ApiError.BadRequest("Пользователь не найден");
         if (!project) throw ApiError.BadRequest("Проект не найден");
 
         if (project.owner.toString() !== userId) {
@@ -55,9 +57,11 @@ class ProjectService {
 
         await S3Service.deleteFile(project.s3Key);
 
-        await UserModel.updateOne({ _id: userId }, { $pull: { projects: projectId } });
+        await UserModel.updateOne({ _id: userId }, { $pull: { projects: projectId }, $inc: { totalStars: -project.stars } });
+        await UserModel.updateMany({favorites: projectId}, {$pull: {favorites: projectId}});
 
         await ProjectModel.deleteOne({ _id: projectId });
+
 
         return { message: "Проект удален" };
     }
@@ -71,7 +75,15 @@ class ProjectService {
         }
         await S3Service.uploadJson(userId, projectJson, project.s3Key);
             
-        if (visibility) project.visibility = visibility;
+        if (visibility) {
+            project.visibility = visibility;
+            if (visibility === 'PRIVATE') {
+                project.stars = 0;
+                project.ratedBy = [];
+                await UserModel.updateOne({ _id: userId }, { $inc: { totalStars: -project.stars } });
+                await UserModel.updateMany({favorites: projectId}, {$pull: {favorites: projectId}});
+            }
+        }
         if (previewImage) project.previewImage = previewImage;
         project.updatedAt = new Date();
         await project.save();
@@ -159,7 +171,8 @@ class ProjectService {
         const project = await ProjectModel.findById(projectId);
         if (!project) throw ApiError.BadRequest("Проект не найден");
         await S3Service.deleteFile(project.s3Key);
-        await UserModel.updateOne({ _id: project.owner }, { $pull: { projects: projectId } });
+        await UserModel.updateOne({ _id: project.owner }, { $pull: { projects: projectId }, $inc: { totalStars: -project.stars } });
+        await UserModel.updateMany({favorites: projectId}, {$pull: {favorites: projectId}});
         await ProjectModel.deleteOne({ _id: projectId });
         return { message: "Проект удален администратором" };
     }

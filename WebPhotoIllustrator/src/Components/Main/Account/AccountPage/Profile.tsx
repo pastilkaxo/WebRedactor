@@ -2,13 +2,10 @@ import React, {useContext, useState} from "react"
 
 import Box from "@mui/joy/Box";
 import Stack from "@mui/joy/Stack";
-import Typography from "@mui/material/Typography";
 import {observer} from  "mobx-react-lite";
 
 import ProfileCard from "./Card";
-import {Context} from "../../../../index";
-import {IUser} from "../../../../models/IUser";
-import UserService from "../../../../Services/UserService";
+
 
 function Profile() {
 

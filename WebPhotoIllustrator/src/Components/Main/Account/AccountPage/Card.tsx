@@ -1,10 +1,7 @@
 import {useContext, useState} from "react";
 
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
-import CardActions from "@mui/joy/CardActions";
-import CardOverflow from "@mui/joy/CardOverflow";
 import Divider from "@mui/joy/Divider";
 import AppBar from "@mui/material/AppBar";
 import Tab from "@mui/material/Tab";
@@ -12,15 +9,12 @@ import Tabs from "@mui/material/Tabs";
 import {observer} from  "mobx-react-lite";
 
 import AdminView from "./AdminView";
-import DesktopStack from "./MUI/DesktopStack";
-import MobileStack from "./MUI/MobileStack";
+import FavView from "./FavView";
 import ProfileView from "./ProfileView";
 import ProjectsView from "./ProjectsView";
-import SettingsView from "./SettingsView";
+import SettingsView from "./SecurityView";
+import AdminProjectsView from "./AdminProjectsView";
 import {Context} from "../../../../index";
-import {IUser} from "../../../../models/IUser";
-import UserService from "../../../../Services/UserService";
-import FavView from "./FavView";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -79,14 +73,15 @@ function ProfileCard(){
           onChange={handleChange}
           indicatorColor="secondary"
           textColor="inherit"
-          variant="fullWidth"
+          variant="scrollable"
           aria-label="full width tabs example"
         >
-          <Tab label="Профиль" {...a11yProps(0)} />
+          <Tab label="Профиль" {...a11yProps(0)}  />
           <Tab label="Проекты" {...a11yProps(1)} />
           <Tab label="Избранное" {...a11yProps(2)} />
-          <Tab label="Настройки" {...a11yProps(3)} />
-          {store.user.roles.includes("ADMIN") && <Tab label="Админ панель" {...a11yProps(4)} />}
+          <Tab label="Безопасность" {...a11yProps(3)} />
+          {store.user.roles.includes("ADMIN") && <Tab label="Админ панель" {...a11yProps(4)} sx={{background:"rgba(232, 7, 7, 1)"}} />}
+          {store.user.roles.includes("ADMIN") && <Tab label="Управление проектами" {...a11yProps(5)} sx={{background:"rgba(232, 7, 7, 1)"}} />}
         </Tabs>
       </AppBar>
       <Divider />
@@ -104,6 +99,9 @@ function ProfileCard(){
       </TabPanel>
       <TabPanel value={value} index={4}>
         {store.user.roles.includes("ADMIN") && <AdminView />}
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        {store.user.roles.includes("ADMIN") && <AdminProjectsView />}
       </TabPanel>
     </Card>
   )

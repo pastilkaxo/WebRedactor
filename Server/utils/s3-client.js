@@ -2,11 +2,23 @@ require('dotenv').config();
 const Minio  = require("minio")
 const os = require('os');
 
-
+function getLocalIpAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+    for (let i = 0; i < iface.length; i++) {
+      const alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address;
+       }
+     }
+  }
+  return '0.0.0.0';
+ }
 
 
 const minioClient = new Minio.Client({
-  endPoint: "192.168.100.2",
+  endPoint: "172.20.10.13",
   port: 9000,
   useSSL: false,
   accessKey: "Vladislav" ,

@@ -114,6 +114,14 @@ class UserService {
         return {message:"Пароль умпешно измненён."}
     }
 
+    async updateMySelf(userId, updates) {
+        const user = await UserModel.findByIdAndUpdate(userId, updates, { new: true });
+        if (!user) {
+            throw ApiError.BadRequest("Пользователь не найден!");
+        }
+        return user;
+    }
+
     // admin part
 
     async getAllUsers() {

@@ -109,18 +109,17 @@ function DesktopStack({ firstName, lastName, setFirstName, setLastName }: any) {
             <FormLabel>Почта: {store.isActivated ? "Активирована" : "Не активирована!"}</FormLabel>
             <Typography 
             > {store.user.email}</Typography>
-          </FormControl>
-
-        </Stack>
-        <Divider />
-        <Stack direction="row" spacing={1}>
-        </Stack>
-      </Stack>
-      <Divider />
+            <FormLabel sx={{marginTop:"10px"}}>Роль:</FormLabel>
+            <Typography sx={{color:"red",fontWeight:"bold"}}> {store.user.roles.includes("ADMIN") ? "Администратор" : "Пользователь"}</Typography>
+          </FormControl>        
       <AccountStats StatName="Projects" StatValue={store.user.projects.length || 0} />
       <AccountStats StatName="Favourite Projects" StatValue={store.user.favorites.length || 0} />
       <AccountStats StatName="Stars" StatValue={store.user.totalStars || 0} />
-    </Stack>
+        </Stack>
+        <Divider />
+      <Divider />
+      </Stack>
+      </Stack>
   )
 }
 

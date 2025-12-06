@@ -47,6 +47,17 @@ class UserController {
         }
     }
 
+    async updateMySelf(req, res, next) { 
+        try {
+            const { id,updates } = req.body;
+            const userData = await userService.updateMySelf(id, updates);
+            return res.json(userData);
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
     async updateUser(req, res, next) { 
         try {
             const { id,updates } = req.body;

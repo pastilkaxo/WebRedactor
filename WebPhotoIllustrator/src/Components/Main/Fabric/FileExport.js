@@ -112,7 +112,7 @@ function FileExport({ canvas,isReadOnly }) {
             json.height = canvas.height;
             
             const previewImage = canvas.toDataURL({
-                format: 'png', 
+                format: "png", 
                 quality: 0.5,   
                 width: canvas.width ,
                 height: canvas.height,

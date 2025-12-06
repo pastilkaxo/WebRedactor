@@ -1,6 +1,6 @@
 import React from "react"
 
-function SettingsView() {
+function SecurityView() {
   
   const handleChangePassword = () => {
   };
@@ -14,9 +14,9 @@ function SettingsView() {
 
   return (
     <div>
-      <h2>Настройки аккаунта</h2>
+      <h2>Настройки безопасности</h2>
     </div>
   )
 }
 
-export default SettingsView
+export default SecurityView

@@ -11,6 +11,7 @@ import {
 import NotFound from "./Components/ErrorAlerts/NotFound";
 import Header from "./Components/Header/Header";
 import Profile from "./Components/Main/Account/AccountPage/Profile";
+import ProjectsView from "./Components/Main/Account/AccountPage/ProjectsView";
 import ResetForm from "./Components/Main/AuthForm/ResetForm";
 import CanvasApp from "./Components/Main/Fabric/CanvasApp";
 import Main from "./Components/Main/Main";
@@ -18,9 +19,6 @@ import Storage from "./Components/Main/Storage/Storage";
 import {Context} from "./index"
 import "./Styles/App.css"
 
-import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
-import ProjectsView from "./Components/Main/Account/AccountPage/ProjectsView";
 
 
 // import '@fontsource/inter';
@@ -33,11 +31,17 @@ function App() {
     if(localStorage.getItem("token")){
       store.checkAuth();
     }
+    if(localStorage.getItem("passwordToken")){
+      store.setWantToResetPass(true);
+    }
   }, []);
 
   // if (store.isLoading) {
   //     return    <CircularProgress   size="2rem" />
   // }
+
+
+    
 
 
   return (
@@ -54,7 +58,7 @@ function App() {
               <Route path="/editor/:id" element={store.isAuth ? <CanvasApp/> : <Main/>} />
               <Route path="/profile" element={store.isAuth ? <Profile /> : <Main />} />
               <Route path="/password/reset" element={store.wantToResetPassword && !store.isAuth ? <ResetForm /> : <NotFound />} />
-              <Route path='*' element={ <NotFound/> } />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </main>
         </div>

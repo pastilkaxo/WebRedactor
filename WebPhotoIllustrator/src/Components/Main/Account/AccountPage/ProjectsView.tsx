@@ -9,11 +9,11 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 
 import { Context } from "../../../../index";
 import { IProject } from "../../../../models/IProject";
@@ -61,9 +61,16 @@ function ProjectsView() {
   }
 
   return (
-    <Box sx={{ flex: 1, width: "100%", bgcolor: "#f5f5f5", minHeight: "100vh", pb: 5 }}>
+    <Box sx={{ flex: 1, width: "100%", pb: 5 }}>
       <Container maxWidth="lg" sx={{ pt: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: "bold", color: "#333" }}>
+        <Box sx={{ 
+            flexGrow: 1, 
+            p: 3, 
+            backgroundColor: "rgba(0, 0, 0, 0.34)", 
+            borderRadius: 2, 
+            boxShadow: 3
+        }}>
+        <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: "bold", color: "white",textAlign:"center" }}>
           Мои проекты
         </Typography>
 
@@ -120,6 +127,7 @@ function ProjectsView() {
             ))}
           </Grid>
         )}
+        </Box>
       </Container>
     </Box>
   )

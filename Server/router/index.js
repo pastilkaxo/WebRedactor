@@ -19,7 +19,8 @@ router.post("/password/forgot",userController.requestPasswordResetLink);
 router.post("/password/reset", userController.resetPassword);
 router.post("/generate-text", gptController.generateText);
 router.get('/activate/:link',tokenController.activate);
-router.get('/refresh',tokenController.refresh);
+router.get('/refresh', tokenController.refresh);
+router.put('/update-myself', authMiddleware, userController.updateMySelf);
 
 router.get('/admin/users',authMiddleware, roleMiddleware(['ADMIN']), userController.getUsers);
 router.put('/admin/user/update', authMiddleware, roleMiddleware(['ADMIN']), userController.updateUser);

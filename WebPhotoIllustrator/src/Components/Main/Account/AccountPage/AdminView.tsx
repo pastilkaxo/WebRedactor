@@ -183,7 +183,7 @@ const AdminView: React.FC = () => {
     }
 
     return (
-        <Box sx={{ height: 650, width: "100%", p: 2 }}>
+        <Box sx={{ height: "auto", width: "100%", p: 2 }}>
             <Typography  variant="h5" gutterBottom sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
                 Пользователи
             </Typography>
@@ -228,7 +228,7 @@ const AdminView: React.FC = () => {
                     }}
                 />
             </Box>
-    <Dialog open={openEditModal} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
+        <Dialog open={openEditModal} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
                 <DialogTitle>Редактирование</DialogTitle>
                 <DialogContent>
                     <Box component="form" sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 2 }}>
